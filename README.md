@@ -8,6 +8,12 @@ Each quest displays its community objective text as a compact list where availab
 
 The objective snapshot is derived from [tyler3497/forever-quests](https://github.com/tyler3497/forever-quests), which in turn credits QuestieDB, TrinityCore, and NorgannonDB. Its objective data is provided under GPL-3.0; see [THIRD-PARTY-LICENSE-forever-quests.md](THIRD-PARTY-LICENSE-forever-quests.md). We select `objectivesText` for matching quest IDs, reject mismatched quest names, omit blank text, and normalize WoW player-substitution codes. The exact upstream commit and coverage are embedded in `objectiveSource` in `quest-finder.html`. Blizzard owns the game content.
 
+## Brazilian Portuguese
+
+The language switch and quest progress are saved independently in the browser. QuestieDB's [Forever PT-BR quest lookup](https://github.com/Questie/QuestieDB/tree/master/l10n/Forever/lookupQuests) supplies localized names and objectives when available. For safety, the importer joins only IDs where the site's English name matches the community English record. Unavailable translations fall back to English; other data such as route walkthroughs and NPC locations may remain in English. No automatic translation service is used. Translated quest data may be inaccurate or outdated. The source commit and coverage are embedded in `ptBRSource`.
+
+[QuestieDB's licensing notice](THIRD-PARTY-NOTICE-QuestieDB.md) says the project team allows copying under GPLv3, but also warns that some historic contributors' permissions are uncertain; Blizzard owns game content. This is not a claim that all underlying contributions have clear GPL licensing.
+
 ## Refresh objective data
 
 **On GitHub:** Open **Actions → Update quest objectives → Run workflow → Run workflow**. The same workflow checks weekly. It runs tests, downloads a specific upstream commit, refreshes the page, commits changes, and requests a Pages rebuild. Check the workflow run for errors. This only adds objectives for quests already in the site; it does not add new quests or change prerequisite chains.
@@ -17,6 +23,7 @@ The objective snapshot is derived from [tyler3497/forever-quests](https://github
 ```sh
 python -m unittest discover -s tools -p 'test_*.py'
 python tools/update_objectives.py
+python tools/update_ptbr.py
 git add quest-finder.html
 git commit -m "Update community quest objectives"
 git push origin main

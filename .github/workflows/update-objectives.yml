@@ -27,6 +27,8 @@ jobs:
         run: python -m unittest discover -s tools -p 'test_*.py'
       - name: Fetch and verify community objectives
         run: python tools/update_objectives.py
+      - name: Refresh Brazilian Portuguese quest text
+        run: python tools/update_ptbr.py
       - name: Commit updated objectives
         run: |
           if git diff --quiet -- quest-finder.html; then
