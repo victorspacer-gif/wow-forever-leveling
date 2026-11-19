@@ -18,6 +18,10 @@ The language switch and quest progress are saved independently in the browser. Q
 
 The search box accepts an item name or numeric item ID in English or Brazilian Portuguese and links to the matching recorded quests. Results identify rewards (including choices), objectives, quest-starting items, and other required items. This index covers only recorded links for quests already in the site, not all game items; missing results do not prove an item has no associated quest. Data can include Classic-era fallback and may not reflect the current live game. See [item data provenance, coverage and update notes](tools/item_README.md).
 
+## NPC profiles
+
+Search NPCs by name or ID in English or Brazilian Portuguese, then open their recorded starting and ending quests in the Quest Finder. The community index covers only quests already on this site and may be incomplete or outdated; missing entries do not establish that an NPC has no other quests. The NPC data is a separate file, `npc-quest-data.js`, which must remain alongside `quest-finder.html` for offline use. See [NPC sources, coverage and rebuild instructions](tools/npc_README.md). The scheduled objective refresh does not refresh the NPC index.
+
 ## Refresh objective data
 
 **On GitHub:** Open **Actions → Update quest objectives → Run workflow → Run workflow**. The same workflow checks weekly. It runs tests, downloads a specific upstream commit, refreshes the page, commits changes, and requests a Pages rebuild. Check the workflow run for errors. This only adds objectives for quests already in the site; it does not add new quests or change prerequisite chains.
