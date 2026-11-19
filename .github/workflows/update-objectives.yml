@@ -29,6 +29,11 @@ jobs:
         run: python tools/update_objectives.py
       - name: Refresh Brazilian Portuguese quest text
         run: python tools/update_ptbr.py
+      - name: Refresh quest item search
+        run: |
+          python tools/item_update.py --output quest-finder.new.html --dataset "$RUNNER_TEMP/item-data.json"
+          mv quest-finder.new.html quest-finder.html
+          python -m unittest discover -s tools -p 'test_*.py'
       - name: Commit updated objectives
         run: |
           if git diff --quiet -- quest-finder.html; then

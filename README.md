@@ -14,6 +14,10 @@ The language switch and quest progress are saved independently in the browser. Q
 
 [QuestieDB's licensing notice](THIRD-PARTY-NOTICE-QuestieDB.md) says the project team allows copying under GPLv3, but also warns that some historic contributors' permissions are uncertain; Blizzard owns game content. This is not a claim that all underlying contributions have clear GPL licensing.
 
+## Item search
+
+The search box accepts an item name or numeric item ID in English or Brazilian Portuguese and links to the matching recorded quests. Results identify rewards (including choices), objectives, quest-starting items, and other required items. This index covers only recorded links for quests already in the site, not all game items; missing results do not prove an item has no associated quest. Data can include Classic-era fallback and may not reflect the current live game. See [item data provenance, coverage and update notes](tools/item_README.md).
+
 ## Refresh objective data
 
 **On GitHub:** Open **Actions → Update quest objectives → Run workflow → Run workflow**. The same workflow checks weekly. It runs tests, downloads a specific upstream commit, refreshes the page, commits changes, and requests a Pages rebuild. Check the workflow run for errors. This only adds objectives for quests already in the site; it does not add new quests or change prerequisite chains.
@@ -24,6 +28,9 @@ The language switch and quest progress are saved independently in the browser. Q
 python -m unittest discover -s tools -p 'test_*.py'
 python tools/update_objectives.py
 python tools/update_ptbr.py
+python tools/item_update.py --output quest-finder.new.html
+python -c "from pathlib import Path; Path('quest-finder.new.html').replace('quest-finder.html')"
+python -m unittest discover -s tools -p 'test_*.py'
 git add quest-finder.html
 git commit -m "Update community quest objectives"
 git push origin main
