@@ -67,7 +67,7 @@ const suggested = [610,603,166,96393,92422,96984,92458,95682,95775,92065];
 const key='wow-forever-quest-finder-done-v1';
 let done = new Set();
 try {done=new Set(JSON.parse(localStorage.getItem(key) || '[]').filter(id=>Q[id]));} catch {}
-let chosen = 610, view = 'quest', limit = 35, matches=[], family='';
+let chosen = 6502, view = 'quest', limit = 35, matches=[], family='';
 const ext = (url,label) => `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${escape(label)}</a>`;
 const src = (id, short=true) => source[id] ? `<span class="source">${ext(source[id][1],short?`[${id}]`:source[id][0])}</span>` : '';
 const pill = (title, tone='') => `<span class="pill ${tone}">${escape(title)}</span>`;
@@ -416,7 +416,7 @@ function handleHash() {
   if(location.hash==='#routes') return show('routes',true);
   if(location.hash==='#about') return show('about',true);
   if(location.hash==='#detail' || /^(#guide-view|#routes-view|#about-view)$/.test(location.hash)) return;
-  open(Number(location.hash.match(/^#quest=(\d+)$/)?.[1])||610,{scroll:false});
+  open(Number(location.hash.match(/^#quest=(\d+)$/)?.[1])||6502,{scroll:false});
 }
 $('search').addEventListener('input',()=>results(true));
 for(const f of ['faction','scope','blocks']) $(f).addEventListener('change',()=>results(true));
