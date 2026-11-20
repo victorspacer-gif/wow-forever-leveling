@@ -1,0 +1,14 @@
+{
+  "sources": [
+    "https://www.wowhead.com/forever/quest=92020/holanyees-big-book-of-big-lizards",
+    "https://forever-xp.com/quests/87492/",
+    "https://www.wowhead.com/forever/quest=87494/microcrystal-contamination",
+    "https://wowforever.gg/en/atlas/knowledge/npcs/tiala-whitemane-n40833/"
+  ],
+  "npcs": {
+    "9271": {"name": "Hol'anyee Marshal", "starts": [92020], "ends": []},
+    "9619": {"name": "Torwa Pathfinder", "starts": [87492], "ends": [87492, 87494]},
+    "40833": {"name": "Tiala Whitemane", "starts": [92169, 92833, 93848], "ends": [90647, 92020, 92169, 92833]},
+    "256222": {"name": "Ketharas", "starts": [90647], "ends": [93848]}
+  }
+}

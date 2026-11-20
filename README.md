@@ -22,6 +22,10 @@ The search box accepts an item name or numeric item ID in English or Brazilian P
 
 Search NPCs by name or ID in English or Brazilian Portuguese, then open their recorded starting and ending quests in the Quest Finder. The community index covers only quests already on this site and may be incomplete or outdated; missing entries do not establish that an NPC has no other quests. The NPC data is a separate file, `npc-quest-data.js`, which must remain alongside `quest-finder.html` for offline use. See [NPC sources, coverage and rebuild instructions](tools/npc_README.md). The scheduled objective refresh does not refresh the NPC index.
 
+## Quest follow-ups
+
+The site distinguishes required unlocks from suggested or reported links. In particular, **Hol'anyee's Big Book of Big Lizards** is shown under **Other recorded follow-ups** for Alien Ecology: both quests share a quest giver, but completing Alien Ecology is not a verified requirement. The separate Hyjal series beginning with **The Staff of the Mountain** is not unlocked by the book. Its first entry names earlier prerequisites not yet mapped on the site. Curated objective summaries serve as fallbacks and are preserved by community data refreshes.
+
 ## Refresh objective data
 
 **On GitHub:** Open **Actions → Update quest objectives → Run workflow → Run workflow**. The same workflow checks weekly. It runs tests, downloads a specific upstream commit, refreshes the page, commits changes, and requests a Pages rebuild. Check the workflow run for errors. This only adds objectives for quests already in the site; it does not add new quests or change prerequisite chains.

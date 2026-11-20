@@ -17,6 +17,18 @@ class NpcDataTests(unittest.TestCase):
         self.assertEqual(stats['missingQuest'], 1)
         self.assertEqual(stats['startsLinks'], 2)
 
+    def test_supplement_merges_missing_quests_and_deduplicates(self):
+        site = {'1': {'name': 'A'}, '2': {'name': 'B'}}
+        source = {'1': {'id': 1, 'name': 'A', 'startedBy': {'npcs': [8]}}}
+        supplemental = {'8': {'name': 'Bob', 'starts': [1, 2], 'ends': [2]}}
+        entries, stats = build(site, source, {}, {8: 'Roberto'}, supplemental)
+        self.assertEqual(entries['8'], {'id': 8, 'name': 'Bob', 'namePtBR': 'Roberto', 'starts': [1, 2], 'ends': [2]})
+        self.assertEqual(stats['questsWithNpc'], 2)
+        self.assertEqual(stats['startsLinks'], 2)
+        self.assertEqual(stats['endsLinks'], 1)
+        with self.assertRaisesRegex(ValueError, 'unknown quest'):
+            build(site, source, {}, {}, {'8': {'name': 'Bob', 'starts': [3]}})
+
     def test_invalid_id(self):
         with self.assertRaises(ValueError):
             build({'1': {'name': 'A'}}, {'1': {'id': 1, 'name': 'A', 'startedBy': {'npcs': [True]}}}, {}, {})
