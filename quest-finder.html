@@ -197,14 +197,19 @@ function groupsHtml(w, back) {
   return [...by].sort((a,b)=>back?b[0]-a[0]:a[0]-b[0]).map(([d,ids])=>subsection(`${d} ${d===1?'step':'steps'} ${back?'before':'after'}`,`<ul class="edge-list">${ids.sort(ord).map(i=>{const p=w.path.get(i);return edgeCard(p.edge,p.from,back?'earlier':'later',false)}).join('')}</ul>`)).join('');
 }
 function optionalLinks(id, before, later) {
-  const seen=new Set([...before.distance.keys(),id,...later.distance.keys()]);
-  const links=[], known=new Set();
+  // List links on the selected quest first so duplicates don't hide a direct link.
+  const seen=new Set([id,...before.distance.keys(),...later.distance.keys()]);
+  const direct=[], other=[], known=new Set();
   for(const k of seen) for(const [adj,dir] of [[pre,'earlier'],[after,'later']]) for(const e of adj(k)) {
     const [j,t]=e, code=[Math.min(k,j),Math.max(k,j),t].join(':');
     if(hard(t)||known.has(code)) continue;
-    known.add(code); links.push([e,k,dir]);
+    known.add(code);
+    (k===id ? direct : other).push([e,k,dir]);
   }
-  return links.length?`<details class="subgroup"><summary>${tr("Optional, reported, and series links","Elos opcionais, relatados e de série")} (${links.length})</summary><p class="muted">${tr("These links are not counted as required progression.","Esses elos não contam como progressão obrigatória.")}</p><ul class="edge-list">${links.map(([e,k,d])=>edgeCard(e,k,d)).join('')}</ul></details>`:'';
+  const note=`<p class="muted">${tr("These links are not counted as required progression.","Esses elos não contam como progressão obrigatória.")}</p>`;
+  const list=links=>`<ul class="edge-list">${links.map(([e,k,d])=>edgeCard(e,k,d)).join('')}</ul>`;
+  const main=subsection(tr("Optional, reported, and series links","Elos opcionais, relatados e de série"),direct.length?note+list(direct):'');
+  return main+(other.length?`<details class="subgroup"><summary>${tr("Non-required links on other steps","Elos não obrigatórios em outras etapas")} (${other.length})</summary>${note}${list(other)}</details>`:'');
 }
 function detail(id) {
   const q=Q[id], objectiveSteps=lang==='pt-BR' && q.objectiveStepsPtBR?.length ? q.objectiveStepsPtBR : q.objectiveSteps || q.manualObjectiveSteps, before=walk(id,pre), later=walk(id,after), seq=strictPath(id);

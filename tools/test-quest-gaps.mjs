@@ -20,7 +20,9 @@ try{
  await nav('quest=3883');
  await until(`!!document.querySelector('#next-panel [data-quest="92020"]')`);
  assert.match(await ev(`document.querySelector('#next-panel').innerText`),/No required follow-up.*Reported.*unconfirmed/s);
- await ev(`document.querySelector('#next-panel [data-quest="92020"]').click()`);
+ assert.match(await ev(`document.querySelector('#series').innerText`),/No required series.*not counted as required progression.*Big Book of Big Lizards.*Reported/s);
+ assert.ok(await ev(`!!document.querySelector('#series section [data-quest="92020"]')`));
+ await ev(`document.querySelector('#series [data-quest="92020"]').click()`);
  await until(`location.hash==='#quest=92020' && !!document.querySelector('#pre-panel [data-quest="3883"]')`);
  assert.match(await ev(`document.querySelector('#detail').innerText`),/Pickup level 55.*Tiala Whitemane.*Summit of Eternity/s);
  assert.match(await ev(`document.querySelector('#quest-objectives').innerText`),/sketchbook.*Tiala Whitemane.*Wowhead Forever/s);
@@ -40,6 +42,7 @@ try{
  await until(`!!document.querySelector('#next-panel')`);
  await ev(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}))})()`);
  assert.match(await ev(`document.querySelector('#next-panel').innerText`),/Nenhuma continuação obrigatória.*Hol'anyee.*Relatada/s);
+ assert.match(await ev(`document.querySelector('#series').innerText`),/Elos opcionais, relatados e de série.*Hol'anyee.*Relatada/s);
  await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
  assert.equal(await ev(`document.documentElement.scrollWidth<=innerWidth`),true);
  assert.deepEqual(errors,[]);
