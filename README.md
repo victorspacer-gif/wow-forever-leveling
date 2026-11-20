@@ -24,6 +24,8 @@ Search NPCs by name or ID in English or Brazilian Portuguese, then open their re
 
 ## Quest follow-ups
 
+**Full recorded chain** uses the same numbered timeline for linear and branching chains, with the selected quest highlighted. For branches, the numbers show display order rather than a required route; the labels on each link explain the recorded relationship.
+
 The site distinguishes required unlocks from suggested or reported links. Direct non-required links are visible by default in **Full recorded chain**, separate from required progression. In particular, **Hol'anyee's Big Book of Big Lizards** is shown under **Other recorded follow-ups** for Alien Ecology: both quests share a quest giver, but completing Alien Ecology is not a verified requirement. The separate Hyjal series beginning with **The Staff of the Mountain** is not unlocked by the book. Its first entry names earlier prerequisites not yet mapped on the site. Curated objective summaries serve as fallbacks and are preserved by community data refreshes.
 
 ## Refresh objective data

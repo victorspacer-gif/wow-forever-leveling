@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
-import {mkdtemp,readFile,writeFile} from 'node:fs/promises';
+import {mkdtemp,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {setTimeout as wait} from 'node:timers/promises';
 const profile=await mkdtemp(join(process.env.TMPDIR||process.cwd(),'npc-chrome-'));
@@ -17,8 +17,40 @@ try{
  await send('Runtime.enable');await send('Page.enable');await send('Network.enable');await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
 
  const nav=async hash=>{await send('Page.navigate',{url:new URL('../quest-finder.html#'+hash,import.meta.url).href});await until(`location.hash===${JSON.stringify('#'+hash)}`)};
+ const timeline=`[...document.querySelectorAll('ol#series-steps > li.chainstep')].map(el=>Number(el.querySelector('.id').textContent.slice(1)))`;
+ const selected=`[...document.querySelectorAll('#series-steps .current [aria-current="step"]')].map(el=>Number(el.nextElementSibling.textContent.slice(1)))`;
+ const showQuest=async id=>{await nav('quest='+id);await until(`(${selected})[0]===${id}`);assert.deepEqual(await ev(selected),[id]);};
+ const setLanguage=async lang=>{await ev(`(()=>{const e=document.querySelector('#language');e.value=${JSON.stringify(lang)};e.dispatchEvent(new Event('change',{bubbles:true}))})()`);};
+
+ await showQuest(610);
+ await setLanguage('en');
+ assert.deepEqual(await ev(timeline),[616,578,601,602,603,610,611]);
+ assert.equal(await ev(`document.querySelectorAll('#series-steps .chain-rule').length`),0);
+ await showQuest(735);
+ assert.deepEqual(await ev(timeline),[709,727,735,737]);
+ const seriesText=`document.querySelector('#series').innerText`;
+ assert.match(await ev(seriesText),/2 quests before · 1 quest after.*not a required route.*Required.*Selected.*One of/s);
+ assert.match(await ev(`document.querySelector('#series-steps [data-quest="737"]').closest('li').innerText`),/One of.*After: The Star, the Hand and the Heart/s);
+ assert.ok(await ev(`document.querySelector('#series-steps [data-quest="737"]').closest('li').querySelector('.chain-rule .source a')?.href`));
+ await ev(`document.querySelector('#series-steps [data-quest="737"]').click()`);
+ await until(`location.hash==='#quest=737' && (${selected})[0]===737`);
+ assert.deepEqual((await ev(timeline)).sort((a,b)=>a-b),[709,727,728,735,736,737]);
+ assert.equal(await ev(`document.querySelectorAll('#series-steps .chain-rule .pill.info').length`),2);
+ assert.equal(await ev(`document.querySelector('#series-steps [data-quest="709"]').closest('li').querySelectorAll('.chain-rule').length`),2);
+ await ev(`history.back();true`);
+ await until(`location.hash==='#quest=735' && (${selected})[0]===735`);
+ await setLanguage('pt-BR');
+ assert.match(await ev(seriesText),/2 missões antes · 1 missão depois.*não uma rota obrigatória.*Obrigatória.*Selecionada.*Uma de.*Depois de:/s);
+ for(const width of [1440,800,560,390]){
+  await send('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:false});
+  assert.deepEqual(await ev(`(()=>{const panel=document.querySelector('#series').getBoundingClientRect();return [...document.querySelectorAll('#series-steps *')].filter(el=>{const r=el.getBoundingClientRect();return r.left<panel.left-1||r.right>panel.right+1}).map(el=>el.textContent)})()`),[],`series overflow at ${width}px`);
+ }
+ await send('Emulation.clearDeviceMetricsOverride');
+ await setLanguage('en');
+
  await nav('quest=3883');
  await until(`!!document.querySelector('#next-panel [data-quest="92020"]')`);
+ assert.deepEqual(await ev(timeline),[3883]);
  assert.match(await ev(`document.querySelector('#next-panel').innerText`),/No required follow-up.*Reported.*unconfirmed/s);
  assert.match(await ev(`document.querySelector('#series').innerText`),/No required series.*not counted as required progression.*Big Book of Big Lizards.*Reported/s);
  assert.ok(await ev(`!!document.querySelector('#series section [data-quest="92020"]')`));
@@ -40,12 +72,12 @@ try{
  assert.ok(await ev(`!!document.querySelector('.npc-profile [data-quest="3883"]')`));
  await nav('quest=3883');
  await until(`!!document.querySelector('#next-panel')`);
- await ev(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}))})()`);
+ await setLanguage('pt-BR');
  assert.match(await ev(`document.querySelector('#next-panel').innerText`),/Nenhuma continuação obrigatória.*Hol'anyee.*Relatada/s);
  assert.match(await ev(`document.querySelector('#series').innerText`),/Elos opcionais, relatados e de série.*Hol'anyee.*Relatada/s);
  await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
  assert.equal(await ev(`document.documentElement.scrollWidth<=innerWidth`),true);
  assert.deepEqual(errors,[]);
  assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
- console.log('Quest gaps verified offline: bidirectional reported link; required Hyjal chain and prerequisite note; NPC profiles; localized labels; history; mobile width; no JS errors.');
+ console.log('Quest chains verified offline: shared timeline for linear, branching and standalone quests; branch rules and sources; bidirectional reported link; Hyjal chain; NPC profiles; history; EN/PT-BR; desktop and mobile widths; no JS errors.');
 }finally{ws?.close();chrome.kill()}
