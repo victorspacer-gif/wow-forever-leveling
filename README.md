@@ -22,6 +22,10 @@ The search box accepts an item name or numeric item ID in English or Brazilian P
 
 Search NPCs by name or ID in English or Brazilian Portuguese, then open their recorded starting and ending quests in the Quest Finder. The community index covers only quests already on this site and may be incomplete or outdated; missing entries do not establish that an NPC has no other quests. The NPC data is a separate file, `npc-quest-data.js`, which must remain alongside `quest-finder.html` for offline use. See [NPC sources, coverage and rebuild instructions](tools/npc_README.md). The scheduled objective refresh does not refresh the NPC index.
 
+## Quest pickup and turn-in locations
+
+Some imported coordinates were expressed on a neighboring zone's map (for example, Nesingwary's Expedition was listed under Westfall). The [location correction ledger](tools/npc_location_fixes.json) records the original labels, NPC IDs, corrected zones and supporting sources. `observed` means ForeverDB has confirmed player observations at the corrected location; `reference` means the fix is supported by reference data, not a direct Forever observation. Coordinates are approximate; a patrol may cover more than one point. The corrections change only pickup and turn-in labels, not quest zones or prerequisites. The scheduled objective refresh preserves these labels.
+
 ## Quest follow-ups
 
 **Full recorded chain** uses the same numbered timeline for linear and branching chains, with the selected quest highlighted. For branches, the numbers show display order rather than a required route; the labels on each link explain the recorded relationship.

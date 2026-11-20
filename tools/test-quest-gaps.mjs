@@ -48,6 +48,20 @@ try{
  await send('Emulation.clearDeviceMetricsOverride');
  await setLanguage('en');
 
+ const places=`[...document.querySelectorAll('.quest-head .locations dd')].map(el=>el.textContent)`;
+ await showQuest(583);
+ const hemet='Hemet Nesingwary — Stranglethorn Vale (35.7, 10.8)';
+ assert.deepEqual(await ev(places),['Barnil Stonepot — Stranglethorn Vale (35.7, 10.5)',hemet]);
+ assert.equal(await ev(`document.querySelector('#series-steps [data-quest="194"]').closest('li').querySelector('.place').textContent`),hemet);
+ await showQuest(194);
+ assert.deepEqual(await ev(places),[hemet,hemet]);
+ await showQuest(5781);
+ const tirion='Tirion Fordring — Eastern Plaguelands (5.2, 35.6)';
+ assert.deepEqual(await ev(places),[tirion,tirion]);
+ await showQuest(7067);
+ const patrol='Centaur Pariah — southern Desolace (patrols)';
+ assert.deepEqual(await ev(places),[patrol,patrol]);
+
  await nav('quest=3883');
  await until(`!!document.querySelector('#next-panel [data-quest="92020"]')`);
  assert.deepEqual(await ev(timeline),[3883]);
@@ -79,5 +93,5 @@ try{
  assert.equal(await ev(`document.documentElement.scrollWidth<=innerWidth`),true);
  assert.deepEqual(errors,[]);
  assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
- console.log('Quest chains verified offline: shared timeline for linear, branching and standalone quests; branch rules and sources; bidirectional reported link; Hyjal chain; NPC profiles; history; EN/PT-BR; desktop and mobile widths; no JS errors.');
+ console.log('Quest chains and location fixes verified offline: shared timeline; branch rules and sources; corrected pickups and turn-ins; Hyjal chain; NPC profiles; history; EN/PT-BR; desktop and mobile widths; no JS errors.');
 }finally{ws?.close();chrome.kill()}
