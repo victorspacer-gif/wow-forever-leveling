@@ -1,0 +1,527 @@
+{
+  "graphSources": {
+    "31": [
+      "ForeverDB: observed Powderfuse quest offers",
+      "https://foreverdb.net/quest/95124-admiral-lamora"
+    ],
+    "32": [
+      "WoW Forever Atlas: Top of the Post",
+      "https://wowforever.gg/en/atlas/knowledge/quests/top-of-the-post-q93269/"
+    ]
+  },
+  "quests": {
+    "93034": {
+      "steps": ["Reach Honored with the Gelkis Clan Centaur and find scout Nerlokh at the southern entrance to the Valley of Bones, far east of Gelkis Village."],
+      "contacts": {"start":[{"kind":"npc","id":5397,"name":"Uthek the Wise"}],"end":[{"kind":"npc","id":253177,"name":"Nerlokh"}]},
+      "sources": [["Wowhead Forever", "https://www.wowhead.com/forever/quest=93034"]]
+    },
+    "92833": {
+      "steps": ["At Nordrassil Lodge, use the Staff of the Mountain to remove Ve'han Talongrasp's protection, then defeat him. Return to Tiala Whitemane."],
+      "items": [[267079,"provided"]],
+      "contacts": {"start":[{"kind":"npc","id":40833,"name":"Tiala Whitemane"}],"end":[{"kind":"npc","id":40833,"name":"Tiala Whitemane"}]},
+      "sources": [["Wowhead Forever", "https://www.wowhead.com/forever/quest=92833/vehans-fall"]]
+    },
+    "95124": {
+      "steps": [
+        "Pick up the quest from Wharfmaster Whizzbuzz at Powderfuse Port (79.4, 52.7).",
+        "Head northeast to the island with two ships. Kill Admiral Lamora on the upper deck of the eastern ship (around 91, 29) and loot Lamora's Key (#268520) from him.",
+        "Go down to the lowest deck of that same ship. Use the key to open Admiral's Treasure Chest (around 90.5, 29.3) and take Lamora's Loot (#268506).",
+        "Take Lamora's Loot back to Wharfmaster Whizzbuzz. The key opens the chest; it is not what you turn in."
+      ],
+      "stepsPtBR": [
+        "Aceite a missão com o Mestre Portuário Carrapeto (Wharfmaster Whizzbuzz), em Powderfuse Port (79.4, 52.7).",
+        "Vá a nordeste até a ilha com dois navios. Mate o Almirante Lamora no convés superior do navio a leste (perto de 91, 29) e pegue a Chave de Lamora (#268520).",
+        "Desça até o convés mais baixo do mesmo navio. Use a chave para abrir o baú do almirante (perto de 90.5, 29.3) e pegue o Saque de Lamora (#268506).",
+        "Leve o Saque de Lamora de volta ao Mestre Portuário. A chave serve para abrir o baú; ela não é o item da entrega."
+      ],
+      "sources": [
+        [
+          "Wowhead: player-reported decks",
+          "https://www.wowhead.com/forever/quest=95124/admiral-lamora#comments:id=6470956"
+        ],
+        [
+          "Key drop",
+          "https://www.wowhead.com/forever/item=268520/lamoras-key"
+        ],
+        [
+          "Treasure chest",
+          "https://www.wowhead.com/forever/object=629472/admirals-treasure-chest"
+        ],
+        [
+          "ForeverDB: observed locations",
+          "https://foreverdb.net/quest/95124-admiral-lamora"
+        ]
+      ],
+      "start": "Wharfmaster Whizzbuzz — Powderfuse Port, Riverglades (79.4, 52.7)",
+      "end": "Wharfmaster Whizzbuzz — Powderfuse Port, Riverglades (79.4, 52.7)",
+      "items": [
+        [
+          268520,
+          "required"
+        ],
+        [
+          268506,
+          "objective"
+        ]
+      ],
+      "requirements": [
+        [
+          95122,
+          "Suggested link",
+          31,
+          "A player was offered Admiral Lamora after Unchecked Expansion. This does not establish a mandatory prerequisite."
+        ]
+      ]
+    },
+    "95118": {
+      "contacts": {
+        "end": [
+          {
+            "kind": "npc",
+            "id": 259961,
+            "name": "Wharfmaster Whizzbuzz"
+          }
+        ]
+      },
+      "steps": [
+        "Defeat 8 Murloc Warriors and 8 Murloc Oracles on the Eastwind Shore south of Powderfuse Port. Players progressed near (71.5, 63) and (74.3, 67.4)."
+      ],
+      "sources": [
+        [
+          "ForeverDB: player observations",
+          "https://foreverdb.net/quest/95118-saltwater-savages"
+        ]
+      ]
+    },
+    "95119": {
+      "steps": [
+        "Defeat 10 Eastsea Buccaneers and 10 Eastsea Musketeers along the coast north of Powderfuse Port, around (87, 35). Return to Wharfmaster Whizzbuzz."
+      ],
+      "sources": [
+        [
+          "ForeverDB: player observations",
+          "https://foreverdb.net/quest/95119-unfriendly-competition"
+        ]
+      ]
+    },
+    "95122": {
+      "steps": [
+        "Defeat 8 Eastsea Raiders and 8 Eastsea Bombardiers near ruined Windstead, around (78.5, 33.8), then return to Wharfmaster Whizzbuzz."
+      ],
+      "sources": [
+        [
+          "Wowhead: quest and targets",
+          "https://www.wowhead.com/forever/quest=95122/unchecked-expansion"
+        ],
+        [
+          "ForeverDB: player observations",
+          "https://foreverdb.net/quest/95122-unchecked-expansion"
+        ]
+      ]
+    },
+    "94618": {
+      "steps": [
+        "Use Wheeler's Steed Feed on a Lost Horse that fled Wheeler's Grange. Players report a horse near (53, 66)."
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 258317,
+            "name": "Benjy Wheeler"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 259254,
+            "name": "Lost Horse"
+          }
+        ]
+      },
+      "items": [
+        [
+          267178,
+          "provided"
+        ]
+      ],
+      "sources": [
+        [
+          "Wowhead: quest and feed",
+          "https://www.wowhead.com/forever/quest=94618/wheelers-fleeing-steeds"
+        ],
+        [
+          "Wowhead: player coordinates",
+          "https://www.wowhead.com/forever/zone=16591/riverglades#comments"
+        ]
+      ]
+    },
+    "90647": {
+      "clearNote": true,
+      "requirements": [
+        [
+          92317,
+          "ALL",
+          30,
+          ""
+        ],
+        [
+          92335,
+          "ALL",
+          30,
+          ""
+        ],
+        [
+          92500,
+          "ALL",
+          30,
+          ""
+        ]
+      ]
+    },
+    "92317": {
+      "items": [
+        [
+          272973,
+          "objective"
+        ]
+      ]
+    },
+    "92335": {
+      "items": [
+        [
+          253239,
+          "objective"
+        ]
+      ]
+    },
+    "92500": {
+      "items": [
+        [
+          272974,
+          "objective"
+        ]
+      ]
+    },
+    "93269": {
+      "start": "Innkeeper Vizzie — Everlook, Winterspring (61.4, 38.8)",
+      "requirements": [
+        [
+          93406,
+          "Series",
+          32,
+          "The Atlas lists Unfrozen Deliveries immediately before Top of the Post."
+        ]
+      ]
+    },
+    "95107": {
+      "steps": [
+        "Defeat Chieftain Deeproar in the Deadwood den and take his Broken Staff to Elder Pinespeaker in Barkskin Burrow."
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 256627,
+            "name": "Elder Mistpaw"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 256650,
+            "name": "Elder Pinespeaker"
+          }
+        ]
+      },
+      "items": [
+        [
+          268507,
+          "objective"
+        ]
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=95107/deeproar-down"
+        ]
+      ]
+    },
+    "95108": {
+      "steps": [
+        "Enter Deadwood Den, defeat 2 Deadwood Death Mystics, and destroy both Deadwood Cauldrons. Return to Elder Mistpaw."
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 256650,
+            "name": "Elder Pinespeaker"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 256627,
+            "name": "Elder Mistpaw"
+          }
+        ]
+      },
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=95108/mystic-mix"
+        ]
+      ]
+    },
+    "93451": {
+      "steps": [
+        "Recover Vindael's Phantasmal Blade and return it to him in Shen'dralas."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=93451/phantasmal-problems"
+        ]
+      ],
+      "items": [
+        [
+          258735,
+          "objective"
+        ]
+      ]
+    },
+    "93832": {
+      "steps": [
+        "Destroy 6 Eternal Sentry gargoyles at the ruined Alliance base in upper Hyjal, then return to Elder Mistpaw."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=93832/shatter-the-stonewatchers"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 256627,
+            "name": "Elder Mistpaw"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 256627,
+            "name": "Elder Mistpaw"
+          }
+        ]
+      }
+    },
+    "94479": {
+      "steps": [
+        "The Loose Cog gives you a Spare Part. Take it to Ketharas in the Tainted Foothills."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=94479/one-persons-trash"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "object",
+            "id": 650234,
+            "name": "Loose Cog"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 256222,
+            "name": "Ketharas"
+          }
+        ]
+      },
+      "items": [
+        [
+          272977,
+          "provided"
+        ]
+      ]
+    },
+    "95327": {
+      "steps": [
+        "Deliver Ruzzgot's Shipment to Friz Frazzlespark at Powderfuse Port."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=95327/alls-well-that-ends-well"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 3945,
+            "name": "Caravaneer Ruzzgot"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 255897,
+            "name": "Friz Frazzlespark"
+          }
+        ]
+      },
+      "items": [
+        [
+          268810,
+          "provided"
+        ]
+      ]
+    },
+    "95378": {
+      "steps": [
+        "Recover the bones of Frezzlie Popwhiz, Tyaeha Darkoath and Dazka Shadowsleep, then return to Felflick."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=95378/the-hydras-head"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 263757,
+            "name": "Felflick"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 263757,
+            "name": "Felflick"
+          }
+        ]
+      },
+      "items": [
+        [
+          273291,
+          "objective"
+        ],
+        [
+          273292,
+          "objective"
+        ],
+        [
+          273290,
+          "objective"
+        ]
+      ]
+    },
+    "96558": {
+      "steps": [
+        "Put the spirits to rest and recover the buried Battle Cache on Mount Hyjal."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=96558/soldiers-solace"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 265375,
+            "name": "Veteran of the Third War"
+          }
+        ],
+        "end": [
+          {
+            "kind": "object",
+            "id": 613848,
+            "name": "Battle Cache"
+          }
+        ]
+      }
+    },
+    "96959": {
+      "steps": [
+        "Light the south and southeast bonfires in Dae'gun, then return to Yashiro."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=96959/blademasters-bonfires"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 267121,
+            "name": "Yashiro"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 267121,
+            "name": "Yashiro"
+          }
+        ]
+      }
+    },
+    "97009": {
+      "steps": [
+        "Collect 12 Felhound Spikes for Maerion Thaelemaches in Dae'gun."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=97009/maerions-misery"
+        ]
+      ],
+      "contacts": {
+        "start": [
+          {
+            "kind": "npc",
+            "id": 267097,
+            "name": "Maerion Thaelemaches"
+          }
+        ],
+        "end": [
+          {
+            "kind": "npc",
+            "id": 267097,
+            "name": "Maerion Thaelemaches"
+          }
+        ]
+      },
+      "items": [
+        [
+          276100,
+          "objective"
+        ]
+      ]
+    },
+    "92521": {
+      "steps": [
+        "Spy on Hnaz’s imp at the tower where the satyr is held captive. Pickup and availability are not confirmed."
+      ],
+      "sources": [
+        [
+          "Wowhead Forever",
+          "https://www.wowhead.com/forever/quest=92521"
+        ]
+      ]
+    }
+  }
+}

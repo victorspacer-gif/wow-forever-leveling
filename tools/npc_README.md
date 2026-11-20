@@ -7,7 +7,7 @@
 
 The index reverses `startedBy.npcs` and `finishedBy.npcs` from [forever-quests](https://github.com/tyler3497/forever-quests), but only where the site's quest ID and normalized English name both match. Names come from [QuestieDB](https://github.com/Questie/QuestieDB) Forever NPC database and PT-BR lookup. Quest IDs refer to the snapshot of `quest-finder.html` used at build time: rebuild after site quests change. Neither objects nor items are treated as NPCs; absent lists do not prove absence in game. Names can be missing even when NPC IDs and relations are known, and separate NPC IDs can share a name. No attempt is made to infer IDs from the site's free-text start/end fields. Community data combines versions, can omit or misidentify records, and is not verified against the live client.
 
-The rebuild also merges `tools/npc_supplement.json`, a small, sourced list of NPC starts and ends for quest records missing from the pinned community snapshot. IDs must exist in the site being rebuilt, duplicate links are ignored, and the sources are embedded in the output. Pass `--supplement` with a compatible file if rebuilding an older snapshot.
+The rebuild also merges `tools/npc_supplement.json`, a small, sourced list of NPC starts and ends for quest records missing from the pinned community snapshot, and the imported launch-zone `foreverNpcs` associations embedded in the HTML. These come from the Forever quest delta-base, WoW Forever Atlas and curated sources. IDs must exist in the site being rebuilt and duplicate links are ignored. Pass `--supplement` with a compatible file if rebuilding an older snapshot.
 
 ## Rebuild
 

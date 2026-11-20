@@ -89,9 +89,26 @@ def build(site, source, names, pt, supplemental=None):
                     entry[relation].append(qid)
                     stats[relation + 'Links'] += 1
                 supplemental_quests.add(qid)
+    forever_quests = set()
+    for qid, quest in site.items():
+        for field, relation in (('start', 'starts'), ('end', 'ends')):
+            for contact in quest.get('foreverNpcs', {}).get(field, []):
+                ident = contact['id']
+                if type(ident) is not int or ident <= 0:
+                    raise ValueError(f'Invalid Forever zone NPC for quest {qid}')
+                key = str(ident)
+                entry = npcs.setdefault(key, {'id': ident, 'name': names.get(ident), 'namePtBR': pt.get(ident), 'starts': [], 'ends': []})
+                entry['name'] = entry['name'] or contact['name']
+                if int(qid) not in entry[relation]:
+                    entry[relation].append(int(qid))
+                    stats[relation + 'Links'] += 1
+                    forever_quests.add(qid)
+    if supplemental or forever_quests:
+        stats['questsWithNpc'] = len({i for n in npcs.values() for i in n['starts'] + n['ends']})
     if supplemental:
         stats['supplementalQuests'] = len(supplemental_quests)
-        stats['questsWithNpc'] = len({i for n in npcs.values() for i in n['starts'] + n['ends']})
+    if forever_quests:
+        stats['foreverZoneQuests'] = len(forever_quests)
     for v in npcs.values():
         v['starts'].sort()
         v['ends'].sort()
