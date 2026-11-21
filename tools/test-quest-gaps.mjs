@@ -48,6 +48,16 @@ try{
  await send('Emulation.clearDeviceMetricsOverride');
  await setLanguage('en');
 
+ await showQuest(3122);
+ const lateMerge=await ev(timeline);
+ assert.ok(lateMerge.indexOf(3127)<lateMerge.indexOf(3129),'Mountain Giant Muisek must precede Weapons of Spirit');
+ await ev(`(()=>{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{globalThis.copiedChain=value}}});document.querySelector('#copy').click()})()`);
+ const copied=await ev('globalThis.copiedChain');
+ assert.match(copied,/Mountain Giant Muisek.*Weapons of Spirit/s);
+ await showQuest(3129);
+ const earlyMerge=await ev(timeline);
+ assert.ok(earlyMerge.indexOf(3122)<earlyMerge.indexOf(3123),'Return to Witch Doctor Uzer’i must precede Testing the Vessel');
+
  const places=`[...document.querySelectorAll('.quest-head .locations dd')].map(el=>el.textContent)`;
  await showQuest(583);
  const hemet='Hemet Nesingwary — Stranglethorn Vale (35.7, 10.8)';
@@ -117,6 +127,39 @@ try{
  await nav('about');
  await until(`!!document.querySelector('#forever-zone-coverage')?.getClientRects().length`);
  assert.match(await ev(`document.querySelector('#forever-zone-coverage').innerText`),/Riverglades — 173 quests.*Mount Hyjal — 158 quests.*Shen'dralas — 39 quests.*Zephras Isle — 151 quests/s);
+
+ const explorerPath=[204,203,207,205,95786,95787,95799];
+ await showQuest(95799);
+ assert.deepEqual(await ev(timeline),explorerPath);
+ assert.deepEqual(await ev(`Array.from(document.querySelectorAll('#pre-panel [data-quest]'),el=>+el.dataset.quest)`),[95787]);
+ assert.match((await ev(places)).join(' · '),/Southshore, Hillsbrad Foothills \(50\.5, 57\.0\).*Hall of Explorers, Ironforge \(77\.2, 12\.0\)/);
+ assert.match(await ev(loot),/Translated Tale.*Guaranteed reward.*Ancient Voodoo Pouch.*Choose one reward.*Chainmail.*Choose one reward.*2,350 XP · 35s.*\+75 reputation with Stormwind.*\+50 reputation with Ironforge/s);
+ assert.match(await setSearch('279881'),/Findings for the Explorer's League.*Choose one reward: Intrepid Explorer's Chainmail/s);
+ await ev(`document.querySelector('#series-steps [data-quest="95787"]').click()`);
+ await until(`(${selected})[0]===95787`);
+ assert.match(await ev(obj),/left after the first boss.*skull in the pirate area.*Var'Taka.*Abyssal Dais/s);
+ assert.match(await setSearch('270311'),/Take Two With Water.*Quest objective: The Fourth Tablet of I'lalai/s);
+ await ev(`document.querySelector('#series-steps [data-quest="95786"]').click()`);
+ await until(`(${selected})[0]===95786`);
+ assert.deepEqual(await ev(timeline),[204,203,207,205,95786,95788,95787,95799,95798]);
+ assert.match(await ev(seriesText),/Magics of the Drowned City.*Take Two With Water.*Findings for the Explorer's League.*After: Take Two With Water.*The Web of Magic.*After: Magics of the Drowned City/s);
+ await showQuest(95798);
+ assert.deepEqual(await ev(timeline),[204,203,207,205,95786,95788,95798]);
+ await setLanguage('pt-BR');
+ assert.match(await ev(obj),/Leve-o a Abra Cadabra em Dalaran/);
+ assert.match(await ev(seriesText),/Tabuletas afogadas|Magias da Cidade Afogada.*A teia de magias/s);
+ assert.match(await setSearch('História Traduzida de Ilalai'),/Achados para a Liga dos Exploradores.*Recompensa garantida: História Traduzida/s);
+ for(const width of [1440,800,560,390]){
+  await send('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:false});
+  assert.deepEqual(await ev(`(()=>{const p=document.querySelector('#series').getBoundingClientRect();return Array.from(document.querySelectorAll('#series-steps *')).filter(el=>{const r=el.getBoundingClientRect();return r.width&&(r.left<p.left-1||r.right>p.right+1)}).map(el=>el.textContent);})()`),[],`Explorer timeline overflows at ${width}px`);
+ }
+ await send('Emulation.clearDeviceMetricsOverride');
+ await setLanguage('en');
+ await nav('npc=2277');
+ await until(`!!document.querySelector('.npc-profile [data-quest="95799"]')`);
+ await nav('npc=2916');
+ await until(`!!document.querySelector('.npc-profile [data-quest="95799"]')`);
+
  await nav('quest=3883');
  await until(`!!document.querySelector('#next-panel')`);
  await setLanguage('pt-BR');
@@ -126,5 +169,5 @@ try{
  assert.equal(await ev(`document.documentElement.scrollWidth<=innerWidth`),true);
  assert.deepEqual(errors,[]);
  assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
- console.log('Quest chains, launch-zone coverage and location fixes verified offline: Lamora route and item searches; saved completion; Hyjal prerequisites; zone records; NPC profiles; history; EN/PT-BR; desktop and mobile widths; no JS errors.');
+ console.log('Quest chains verified offline: #610 and #735 share one timeline, branch merges are ordered, Explorer’s League has two independent paths, and direct reported links stay visible. Items, locations, NPCs, history, EN/PT-BR and desktop/mobile widths passed.');
 }finally{ws?.close();chrome.kill()}

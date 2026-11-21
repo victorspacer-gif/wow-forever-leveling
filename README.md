@@ -28,9 +28,9 @@ Some imported coordinates were expressed on a neighboring zone's map (for exampl
 
 ## Quest follow-ups
 
-**Full recorded chain** uses the same numbered timeline for linear and branching chains, with the selected quest highlighted. For branches, the numbers show display order rather than a required route; the labels on each link explain the recorded relationship.
+**Full recorded chain** uses the same numbered timeline for linear and branching chains, with the selected quest highlighted. For branches, numbers show display order, not a mandatory route; prerequisites are shown above quests they unlock even when another branch reaches the follow-up sooner. The rules and source links remain visible, and the copied chain follows the same order.
 
-The site distinguishes required unlocks from suggested or reported links. Direct non-required links are visible by default in **Full recorded chain**, separate from required progression. Completing Alien Ecology is not a verified requirement for **Hol'anyee's Big Book of Big Lizards**. The book does not lead into the separate Mount Hyjal series: **The Staff of the Mountain** has three prerequisites listed by WoW Forever Atlas. For **Admiral Lamora**, ForeverDB observed an offer after **Unchecked Expansion**; this is not treated as a required unlock.
+The site distinguishes required unlocks from suggested or reported links. Direct non-required links are visible by default in **Full recorded chain**, separate from required progression. Completing Alien Ecology is not a verified requirement for **Hol'anyee's Big Book of Big Lizards**. The book does not lead into the separate Mount Hyjal series: **The Staff of the Mountain** has three prerequisites listed by WoW Forever Atlas. For **Admiral Lamora**, ForeverDB observed an offer after **Unchecked Expansion**; this is not treated as a required unlock. The [Explorer’s League curation](tools/forever-explorers-league.json) records two separate branches from **An Acquaintance in Southshore**: **Take Two With Water → Findings for the Explorer's League** and **Magics of the Drowned City → The Web of Magic**. Neither branch is a prerequisite for the other.
 
 ## Forever launch zones
 

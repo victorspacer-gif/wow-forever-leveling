@@ -1,0 +1,80 @@
+{
+  "sources": {
+    "33": ["Wowhead Forever: Drowned City quest paths", "https://www.wowhead.com/forever/news/explore-the-drowned-city-new-dungeon-in-wow-forever-383825"],
+    "34": ["QuestieDB Forever: high-confidence prerequisite traces", "https://github.com/Questie/QuestieDB/blob/9cf27d6491dd80f1998aa0a846dbea9a3c5daad9/src/corrections/Forever/traces/foreverQuestRelationTraces.lua"],
+    "35": ["Wowhead: players report both Rebel Camp quests", "https://www.wowhead.com/forever/quest=95787/take-two-with-water#comments:id=6476418"]
+  },
+  "quests": {
+    "207": {
+      "name": "Kurzen's Mystery",
+      "pre": [[203,"ALL",35,""],[204,"ALL",35,""]],
+      "foreverObjectiveSteps": ["Make rubbings of the four troll tablets in northern Stranglethorn Vale and bring the legends back to Brother Nimetz at the Rebel Camp.","The first is in the Bal'lal Ruins, the second is underwater at the Vile Reef, and the third and fourth are in the Ruins of Zul'Kunda. These are not the four Drowned City tablets used later in the chain."],
+      "foreverObjectiveStepsPtBR": ["Faça decalques das quatro tabuletas trólicas no norte da Selva do Espinhaço e leve as lendas ao Irmão Nimetz no Acampamento dos Rebeldes.","A primeira fica nas Ruínas de Bal'lal, a segunda fica submersa no Arrecife Torpe, e a terceira e a quarta ficam nas Ruínas de Zul'Kunda. São diferentes das quatro tabuletas da Cidade Afogada exigidas mais adiante."],
+      "foreverObjectiveSources": [["Quest text and Forever player map pins", "https://foreverdb.net/quest/207-kurzens-mystery"]]
+    },
+    "95786": {
+      "name": "An Acquaintance in Southshore", "level": 40,
+      "pre": [[205,"ALL",34,""]],
+      "start": "Brother Nimetz — Rebel Camp, Stranglethorn Vale (37.9, 3.6)",
+      "end": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.0)",
+      "foreverNamePtBR": "Um conhecido na Costa Sul",
+      "foreverObjectiveSteps": ["Take the Savage Coast Report Bundle that Brother Nimetz gives you to Loremaster Dibbs in Southshore. Dibbs then offers two separate Drowned City quests; pick up both before traveling if you want both rewards."],
+      "foreverObjectiveStepsPtBR": ["Leve o Pacotão de Relatórios da Costa Selvagem, entregue pelo Irmão Nimetz, ao Historiador Dibbs na Costa Sul. Dibbs oferece duas missões separadas da Cidade Afogada; aceite as duas antes de viajar se quiser ambas as recompensas."],
+      "foreverObjectiveSources": [["Wowhead Forever", "https://www.wowhead.com/forever/quest=95786/an-acquaintance-in-southshore"],["ForeverDB: contacts", "https://foreverdb.net/quest/95786-an-acquaintance-in-southshore"]],
+      "foreverNpcs": {"start":[{"id":739,"name":"Brother Nimetz"}],"end":[{"id":2277,"name":"Loremaster Dibbs"}]},
+      "foreverItems": [{"id":270340,"name":"Savage Coast Report Bundle","namePtBR":"Pacotão de Relatórios da Costa Selvagem","relation":"provided"}]
+    },
+    "95787": {
+      "name": "Take Two With Water",
+      "pre": [[95786,"ALL",34,""]],
+      "start": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.1)",
+      "end": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.1)",
+      "foreverNamePtBR": "Tabuletas afogadas",
+      "foreverObjectiveSteps": ["Enter The Drowned City via the underwater cave off western Stranglethorn Vale, south of the Haunted Isle. Interact with four tablets inside to make rubbings.","First tablet: take the path down to the left after the first boss. Second: look for it partly inside a skull in the pirate area.","Third tablet: look near Var'Taka, the naga boss. Fourth: look behind the final boss area (the Abyssal Dais).", "Take all four rubbings back to Loremaster Dibbs in Southshore to unlock Findings for the Explorer's League."],
+      "foreverObjectiveStepsPtBR": ["Entre na Cidade Afogada pela caverna submersa a oeste da Selva do Espinhaço, ao sul da Ilha Assombrada. Interaja com quatro tabuletas dentro da masmorra para fazer decalques.","Primeira tabuleta: desça pelo caminho à esquerda depois do primeiro chefe. Segunda: procure na área dos piratas, parcialmente dentro de um crânio.","Terceira tabuleta: procure perto de Var'Taka, o chefe naga. Quarta: procure atrás da área do chefe final (o Estrado Abissal).", "Leve os quatro decalques ao Historiador Dibbs na Costa Sul para liberar Achados para a Liga dos Exploradores."],
+      "foreverObjectiveSources": [["Wowhead Forever: quest", "https://www.wowhead.com/forever/quest=95787/take-two-with-water"],["Wowhead: player-reported tablet locations", "https://www.wowhead.com/forever/quest=95787/take-two-with-water#comments:id=6468567"],["Drowned City map", "https://hyjal.cc/dungeons/the-drowned-city"]],
+      "foreverNpcs": {"start":[{"id":2277,"name":"Loremaster Dibbs"}],"end":[{"id":2277,"name":"Loremaster Dibbs"}]},
+      "foreverItems": [{"id":270308,"name":"The First Tablet of I'lalai","namePtBR":"Primeira Tabuleta de I'lalai","relation":"objective"},{"id":270309,"name":"The Second Tablet of I'lalai","namePtBR":"Segunda Tabuleta de I'lalai","relation":"objective"},{"id":270310,"name":"The Third Tablet of I'lalai","namePtBR":"Terceira Tabuleta de I'lalai","relation":"objective"},{"id":270311,"name":"The Fourth Tablet of I'lalai","namePtBR":"Quarta Tabuleta de I'lalai","relation":"objective"}],
+      "foreverRewards": {"xp":8450,"money":15000}
+    },
+    "95788": {
+      "name": "Magics of the Drowned City",
+      "pre": [[95786,"ALL",34,""]],
+      "start": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.1)",
+      "end": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.1)",
+      "foreverNamePtBR": "Magias da Cidade Afogada",
+      "foreverObjectiveSteps": ["Loot five I'lalai Fetishes (#270343) from trolls inside The Drowned City. You can collect these while doing Take Two With Water.","Return the fetishes to Loremaster Dibbs in Southshore to unlock The Web of Magic. This is a separate branch from Findings for the Explorer's League."],
+      "foreverObjectiveStepsPtBR": ["Pegue cinco Fetiches de I'lalai (#270343) dos trolls da Cidade Afogada. Você pode fazer isso junto com Tabuletas afogadas.","Leve os fetiches ao Historiador Dibbs na Costa Sul para liberar A teia de magias. É um ramo separado de Achados para a Liga dos Exploradores."],
+      "foreverObjectiveSources": [["Wowhead Forever", "https://www.wowhead.com/forever/quest=95788/magics-of-the-drowned-city"],["ForeverDB: contacts", "https://foreverdb.net/quest/95788-magics-of-the-drowned-city"]],
+      "foreverNpcs": {"start":[{"id":2277,"name":"Loremaster Dibbs"}],"end":[{"id":2277,"name":"Loremaster Dibbs"}]},
+      "foreverItems": [{"id":270343,"name":"I'lalai Fetish","namePtBR":"Fetiche de I'lalai","relation":"objective"}],
+      "foreverRewards": {"xp":8450}
+    },
+    "95798": {
+      "name": "The Web of Magic", "hasNew": true, "side": "Alliance", "zone": "Alterac Mountains", "dungeon": "The Drowned City", "min": 30, "level": 40,
+      "foreverNamePtBR": "A teia de magias",
+      "pre": [[95788,"ALL",34,""]],
+      "start": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.0)",
+      "end": "Abra Cadabra — Dalaran, Alterac Mountains (12.1, 70.3)",
+      "foreverObjectiveSteps": ["After turning in Magics of the Drowned City, accept the delivery from Loremaster Dibbs. He provides the Bundle of I'lalai Findings (#270339).","Take it to Abra Cadabra in Dalaran, Alterac Mountains. The quest text warns that entry to the city can be restricted; it does not specify a separate requirement for this quest."],
+      "foreverObjectiveStepsPtBR": ["Depois de entregar Magias da Cidade Afogada, aceite a entrega com o Historiador Dibbs. Ele fornece o pacote de descobertas de I'lalai (#270339).","Leve-o a Abra Cadabra em Dalaran, nas Montanhas de Alterac. O texto alerta que a entrada na cidade pode ser restrita, mas não especifica um pré-requisito separado para esta missão."],
+      "foreverObjectiveSources": [["Wowhead Forever", "https://www.wowhead.com/forever/quest=95798/the-web-of-magic"],["ForeverDB: observed locations", "https://foreverdb.net/quest/95798-the-web-of-magic"],["Wowhead PT-BR", "https://www.wowhead.com/forever/pt/quest=95798/the-web-of-magic"]],
+      "foreverNpcs": {"start":[{"id":2277,"name":"Loremaster Dibbs"}],"end":[{"id":252019,"name":"Abra Cadabra"}]},
+      "foreverItems": [{"id":270339,"name":"Bundle of I'lalai Findings","namePtBR":"Pacotão de Descobertas de I'lalai","relation":"provided"},{"id":279878,"name":"Apprentice Sorcerer's Slacks","relation":"choice"},{"id":279879,"name":"Rune-Etched Epaulets","relation":"choice"}],
+      "foreverRewards": {"xp":2350,"money":3500}
+    },
+    "95799": {
+      "name": "Findings for the Explorer's League", "hasNew": true, "side": "Alliance", "zone": "Ironforge", "dungeon": "The Drowned City", "min": 30, "level": 40,
+      "foreverNamePtBR": "Achados para a Liga dos Exploradores",
+      "pre": [[95787,"ALL",34,""]],
+      "start": "Loremaster Dibbs — Southshore, Hillsbrad Foothills (50.5, 57.0)",
+      "end": "Historian Karnik — Hall of Explorers, Ironforge (77.2, 12.0)",
+      "foreverObjectiveSteps": ["Turn in Take Two With Water to Loremaster Dibbs in Southshore, then accept this follow-up.","Deliver Dibbs' I'lalai translations to Historian Karnik in Ironforge's Hall of Explorers. You do not need to go back into The Drowned City for this step. The Translated Tale of I'lalai (#272124) is a reward, not an item you need to acquire first."],
+      "foreverObjectiveStepsPtBR": ["Entregue Tabuletas afogadas ao Historiador Dibbs na Costa Sul e aceite esta continuação.","Leve as traduções de I'lalai de Dibbs ao Historiador Karnik no Salão dos Exploradores, em Altaforja. Não é preciso voltar à Cidade Afogada. O conto traduzido de I'lalai (#272124) é uma recompensa, não um item que você precisa conseguir antes."],
+      "foreverObjectiveSources": [["Wowhead Forever: quest and rewards", "https://www.wowhead.com/forever/quest=95799/findings-for-the-explorers-league"],["ForeverDB: observed locations and rewards", "https://foreverdb.net/quest/95799-findings-for-the-explorers-league"],["Wowhead PT-BR", "https://www.wowhead.com/forever/pt/quest=95799/findings-for-the-explorers-league"]],
+      "foreverNpcs": {"start":[{"id":2277,"name":"Loremaster Dibbs"}],"end":[{"id":2916,"name":"Historian Karnik"}]},
+      "foreverItems": [{"id":272124,"name":"Translated Tale of I'lalai","namePtBR":"História Traduzida de I'lalai","relation":"guaranteed"},{"id":279880,"name":"Ancient Voodoo Pouch","relation":"choice"},{"id":279881,"name":"Intrepid Explorer's Chainmail","relation":"choice"}],
+      "foreverRewards": {"xp":2350,"money":3500,"reputation":[[72,"Stormwind","Ventobravo",75],[47,"Ironforge","Altaforja",50]]}
+    }
+  }
+}

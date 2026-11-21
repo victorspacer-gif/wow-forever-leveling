@@ -90,6 +90,24 @@ def slot(arr, ix):
     return (arr[ix] or []) if len(arr) > ix else []
 
 
+def apply_curated_chain(data, chain):
+    for ident, source in chain['sources'].items():
+        if ident in data['sources'] and data['sources'][ident] != source:
+            raise ValueError(f'Curated chain source ID collision: {ident}')
+        data['sources'][ident] = source
+    for ident, patch in chain['quests'].items():
+        q = data['quests'].setdefault(ident, {})
+        if q and q['name'] != patch['name']:
+            raise ValueError(f'Curated chain quest name mismatch: {ident}')
+        existing = q.get('pre', [])
+        edges = {tuple(edge[:2]): edge for edge in existing}
+        for edge in patch.get('pre', []):
+            edges[tuple(edge[:2])] = edge
+        q.update(patch)
+        if edges:
+            q['pre'] = list(edges.values())
+
+
 def import_data(data, listings, atlas, curated, raw):
     quests = data['quests']
     stats = {}
@@ -213,6 +231,7 @@ def import_data(data, listings, atlas, curated, raw):
             counter['itemLinks'] += len(items)
         stats[z] = dict(counter)
     data['sources'].update(curated['graphSources'])
+    apply_curated_chain(data, json.loads((HERE/'forever-explorers-league.json').read_text(encoding='utf-8')))
     for ident, rec in quests.items():
         for source_id, _, evidence, _ in rec.get('pre', []):
             if str(source_id) not in quests or str(evidence) not in data['sources']:

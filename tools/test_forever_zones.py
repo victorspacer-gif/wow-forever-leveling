@@ -2,7 +2,7 @@ import json
 import re
 import unittest
 
-from import_forever_zones import EXCLUDED, HERE, ZONE_IDS, literal
+from import_forever_zones import EXCLUDED, HERE, ZONE_IDS, apply_curated_chain, literal
 from item_update import MARKER
 
 
@@ -59,6 +59,20 @@ class ForeverZoneTests(unittest.TestCase):
             for earlier, _, source, _ in q.get('pre', []):
                 self.assertIn(str(earlier), quests)
                 self.assertIn(str(source), self.page['sources'])
+
+    def test_explorer_curation_is_idempotent_and_branches_are_independent(self):
+        chain = json.loads((HERE/'forever-explorers-league.json').read_text(encoding='utf-8'))
+        data = json.loads(json.dumps(self.page))
+        apply_curated_chain(data, chain)
+        self.assertEqual(data, self.page)
+        quests = data['quests']
+        for quest, prerequisite in ((95787, 95786), (95788, 95786), (95799, 95787), (95798, 95788)):
+            self.assertEqual(quests[str(quest)]['pre'], [[prerequisite, 'ALL', 34, '']])
+        self.assertEqual({item['id']: item['relation'] for item in quests['95799']['foreverItems']},
+                         {272124: 'guaranteed', 279880: 'choice', 279881: 'choice'})
+        self.assertIn(95799, self.npcs['2277']['starts'])
+        self.assertIn(95799, self.npcs['2916']['ends'])
+        self.assertIn(95798, self.npcs['252019']['ends'])
 
 
 if __name__ == '__main__':
