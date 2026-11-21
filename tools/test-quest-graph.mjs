@@ -2,14 +2,27 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
-const html=await readFile(new URL('../quest-finder.html',import.meta.url),'utf8');
+const html=await readFile(process.argv[2] || new URL('../quest-finder.html',import.meta.url),'utf8');
 const data=JSON.parse(html.match(/<script id="quest-data" type="application\/json">(.*?)<\/script>/s)[1]);
+const kinds=new Set(['ALL','ANY','Active','Count','Breadcrumb','Suggested link','Series','Reported','Check source']);
+for(const [id,quest] of Object.entries(data.quests)){
+ assert.match(id,/^[1-9]\d*$/,'Malformed quest ID');
+ const seen=new Set();
+ for(const edge of quest.pre || []){
+  const [from,kind,source,note]=edge, key=`${from}:${kind}`;
+  assert.ok(Array.isArray(edge)&&edge.length===4&&typeof note==='string'&&kinds.has(kind),`Invalid relationship on quest #${id}`);
+  assert.ok(Number.isSafeInteger(from)&&from!==Number(id)&&Object.hasOwn(data.quests,from),`Invalid prerequisite #${from} on quest #${id}`);
+  assert.ok(Number.isSafeInteger(source)&&Object.hasOwn(data.sources,source)&&String(data.sources[source][1]).startsWith('https://'),`Missing or invalid source #${source} on quest #${id}`);
+  assert.ok(!seen.has(key),`Duplicate relationship ${key} on quest #${id}`);
+  seen.add(key);
+ }
+}
 // Exercise the page's own graph logic against every record, without rendering
 // thousands of pages; test-quest-gaps.mjs covers rendered browser behavior.
 const plain=html.slice(html.indexOf('const hard'),html.indexOf('const questName'));
 const walk=html.slice(html.indexOf('function walk('),html.indexOf('function edgeCard('));
 const rows=html.slice(html.indexOf('function seriesRows('),html.indexOf('function optionalLinks('));
-assert.ok(plain.includes('const ord') && walk.includes('strictPath') && rows.includes('indegree'));
+assert.ok(plain.includes('const ord') && walk.includes('strictPath') && rows.startsWith('function seriesRows('));
 const Q=data.quests, ids=Object.keys(Q).map(Number);
 const result=vm.runInNewContext(plain+'\n'+walk+'\n'+rows+`
  let branching=0, linked=0;

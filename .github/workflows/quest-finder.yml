@@ -1,0 +1,138 @@
+name: Quest Finder checks and Pages
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: Import upstream objective, language and item data before publishing
+        type: boolean
+        default: false
+  schedule:
+    - cron: '17 7 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quest-finder-${{ github.event_name == 'pull_request' && github.ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Check quest data and timeline layout
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      imported_sha256: ${{ steps.refresh.outputs.sha256 }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+      - name: Stage and validate an objective refresh
+        id: refresh
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh))
+        run: |
+          cp quest-finder.html "$RUNNER_TEMP/quest-finder.before.html"
+          python tools/update_objectives.py
+          python tools/update_ptbr.py
+          python tools/item_update.py --output "$RUNNER_TEMP/quest-finder.new.html" --dataset "$RUNNER_TEMP/item-data.json"
+          python tools/verify_objective_import.py "$RUNNER_TEMP/quest-finder.before.html" "$RUNNER_TEMP/quest-finder.new.html"
+          mv "$RUNNER_TEMP/quest-finder.new.html" quest-finder.html
+          if ! git diff --quiet -- quest-finder.html; then
+            printf 'sha256=%s\n' "$(sha256sum quest-finder.html | cut -d ' ' -f1)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run whole-graph and Chromium checks
+        run: |
+          export CHROMIUM="$(command -v google-chrome)"
+          test -n "$CHROMIUM"
+          bash tools/check-quest-finder.sh
+      - name: Save the tested import for commit
+        if: steps.refresh.outputs.sha256 != ''
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: verified-objective-import
+          path: quest-finder.html
+          if-no-files-found: error
+          retention-days: 3
+      - name: Package the tested site
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          cp index.html quest-finder.html leveling-guide.html npc-quest-data.js \
+             README.md THIRD-PARTY-LICENSE-forever-quests.md THIRD-PARTY-NOTICE-QuestieDB.md "$RUNNER_TEMP/site/"
+      - name: Save the tested site for Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: ${{ runner.temp }}/site
+
+  commit-import:
+    name: Commit the tested objective import
+    needs: verify
+    if: github.ref == 'refs/heads/main' && needs.verify.outputs.imported_sha256 != ''
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      revision: ${{ steps.push.outputs.revision }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: verified-objective-import
+          path: ${{ runner.temp }}/verified-import
+      - name: Verify bytes and push without force
+        id: push
+        env:
+          EXPECTED_SHA256: ${{ needs.verify.outputs.imported_sha256 }}
+        run: |
+          candidate="$RUNNER_TEMP/verified-import/quest-finder.html"
+          printf '%s  %s\n' "$EXPECTED_SHA256" "$candidate" | sha256sum --check
+          cp "$candidate" quest-finder.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- quest-finder.html
+          git commit -m 'Update community quest objectives'
+          git push origin HEAD:main
+          printf 'revision=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  publish:
+    name: Publish only the verified site
+    needs: [verify, commit-import]
+    if: >-
+      !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' &&
+      needs.verify.result == 'success' &&
+      (needs.commit-import.result == 'success' || needs.commit-import.result == 'skipped')
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Refuse to publish an older revision than main
+        env:
+          TESTED_REVISION: ${{ needs.commit-import.outputs.revision || github.sha }}
+        run: |
+          main_revision=$(git ls-remote "https://github.com/$GITHUB_REPOSITORY.git" refs/heads/main | cut -f1)
+          test "$TESTED_REVISION" = "$main_revision" || {
+            echo 'main moved after testing; run the workflow from current main.' >&2
+            exit 1
+          }
+      - name: Deploy tested artifact to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

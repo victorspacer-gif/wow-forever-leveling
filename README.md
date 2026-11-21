@@ -36,24 +36,27 @@ The site distinguishes required unlocks from suggested or reported links. Direct
 
 Riverglades, Mount Hyjal, Shen'dralas and Zephras Isle use the saved Wowhead Forever quest listings/zone tab for quest IDs, levels and rewards. The pinned [QuestieDB Forever delta-base](https://github.com/Questie/QuestieDB/tree/9cf27d6491dd80f1998aa0a846dbea9a3c5daad9/src/corrections/Forever/generated) supplies objective text, NPC/object contacts, selected coordinates and item roles. WoW Forever Atlas fills gaps, and the curation file records direct game-database sources and player observations. Listing coverage does not guarantee a quest is currently obtainable. Location coordinates are approximate, and chain links are only added where specifically sourced. Missing links do not prove there are no prerequisites.
 
-The import is additive: it preserves existing guide routes, recorded quest IDs and progress, except for explicit documented endpoint or relationship corrections. Rebuild the snapshot with `python tools/import_forever_zones.py --output quest-finder.new.html`, then replace the HTML after testing and run `python tools/build_npc_data.py` to rebuild the NPC index. The weekly refresh does not replace the launch-zone objective, quest-item, or translation fields. The checked-in `tools/forever-zone-listings.json`, `tools/forever-atlas-zone-details.json`, and `tools/forever-zone-curations.json` are inputs, not network dependencies for visitors.
+The import is additive: it preserves existing guide routes, recorded quest IDs and progress, except for explicit documented endpoint or relationship corrections. Rebuild the snapshot with `python tools/import_forever_zones.py --output quest-finder.new.html`, run `node tools/test-quest-graph.mjs quest-finder.new.html`, then replace the HTML, rebuild the NPC index with `python tools/build_npc_data.py`, and run `bash tools/check-quest-finder.sh` before committing. The weekly refresh does not replace the launch-zone objective, quest-item, or translation fields. The checked-in `tools/forever-zone-listings.json`, `tools/forever-atlas-zone-details.json`, and `tools/forever-zone-curations.json` are inputs, not network dependencies for visitors.
 
 ## Refresh objective data
 
-**On GitHub:** Open **Actions → Update quest objectives → Run workflow → Run workflow**. The same workflow checks weekly. It runs tests, downloads a specific upstream commit, refreshes the page, commits changes, and requests a Pages rebuild. Check the workflow run for errors. This only adds objectives for quests already in the site; it does not add new quests or change prerequisite chains.
+**On GitHub:** Open **Actions → Quest Finder checks and Pages → Run workflow**, select `main`, and enable the refresh checkbox to import upstream data. The same workflow imports weekly, and checks pull requests and pushes to `main` without reimporting. An objective refresh may update objective/translation fields and the item index, not the layout, prerequisites, quest IDs, routes, or curated details. The workflow tests the candidate before committing it and publishes only the exact checked site artifact. A failed check leaves the last successful Pages deployment live.
 
-**Locally:** With Python 3 and Git installed:
+**Locally:** Use Python 3, Node.js 22+, Git, and Chromium (set `CHROMIUM` to the executable path if it isn't `chromium`):
 
 ```sh
-python -m unittest discover -s tools -p 'test_*.py'
+cp quest-finder.html quest-finder.before.html
 python tools/update_objectives.py
 python tools/update_ptbr.py
 python tools/item_update.py --output quest-finder.new.html
+python tools/verify_objective_import.py quest-finder.before.html quest-finder.new.html
 python -c "from pathlib import Path; Path('quest-finder.new.html').replace('quest-finder.html')"
-python -m unittest discover -s tools -p 'test_*.py'
+bash tools/check-quest-finder.sh
 git add quest-finder.html
 git commit -m "Update community quest objectives"
 git push origin main
 ```
 
 The updater validates the source, refuses large coverage drops, checks names as well as IDs, safely embeds the data and prints coverage and conflicts. An upstream update can still contain incorrect or incomplete game data. The updater doesn't need API keys and doesn't contact ForeverDB. `--commit <full upstream SHA>` pins a specific upstream version for reproducibility. If the source is unchanged the update is deterministic and produces no diff. Read the workflow log if a run fails; do not force a partial update.
+
+The timeline test checks every quest graph, and Chromium checks representative linear, choice, merged, and reported-only routes in English and PT-BR at 320, 390, 650, 651, and 1440 CSS pixels. It verifies numbering, the selected step, visible non-required links, and text wrapping, including a long imported name. Only changes that pass these checks can reach Pages through the workflow.

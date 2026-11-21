@@ -164,10 +164,53 @@ try{
  await until(`!!document.querySelector('#next-panel')`);
  await setLanguage('pt-BR');
  assert.match(await ev(`document.querySelector('#next-panel').innerText`),/Nenhuma continuação obrigatória.*Hol'anyee.*Relatada/s);
- assert.match(await ev(`document.querySelector('#series').innerText`),/Elos opcionais, relatados e de série.*Hol'anyee.*Relatada/s);
- await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
- assert.equal(await ev(`document.documentElement.scrollWidth<=innerWidth`),true);
+ assert.match(await ev(seriesText),/Elos opcionais, relatados e de série.*Hol'anyee.*Relatada/s);
+ const layout=`(() => {
+   const panel=document.querySelector('#series'), bounds=panel.getBoundingClientRect();
+   const list=panel.querySelectorAll(':scope > ol#series-steps.steps');
+   const rows=Array.from(list[0]?.children || []), form=getComputedStyle(list[0] || panel);
+   const markers=rows.map(row=>getComputedStyle(row,'::before'));
+   const outside=r=>r.width>0&&(r.left<bounds.left-1||r.right>bounds.right+1);
+   const failures=[];
+   for(const e of panel.querySelectorAll('li, h3, h4, .place, .chain-rule, a, strong, p, summary, .starter, .series-top')){
+     if(outside(e.getBoundingClientRect())) failures.push(e.textContent.slice(0,80));
+   }
+   const text=document.createTreeWalker(panel,NodeFilter.SHOW_TEXT);
+   while(text.nextNode()){
+     if(!text.currentNode.textContent.trim())continue;
+     const range=document.createRange();range.selectNodeContents(text.currentNode);
+     if(Array.from(range.getClientRects()).some(outside)) failures.push(text.currentNode.textContent.trim().slice(0,80));
+   }
+   return {count:list.length, rows:rows.length, validRows:rows.every(row=>row.matches('li.chainstep')&&row.getClientRects().length),
+     current:rows.filter(row=>row.classList.contains('current')).length,
+     highlighted:rows.length<2 || new Set(markers.map(style=>style.backgroundColor)).size>1,
+     numbered:form.counterReset==='seq 0'&&markers.every(style=>style.counterIncrement==='seq 1'&&style.content.includes('counter(seq')),
+     report:!!panel.querySelector(':scope > .subgroup a[data-quest="92020"]')?.getClientRects().length,
+     pageOverflow:document.documentElement.scrollWidth>innerWidth, failures};
+ })()`;
+ const cases=new Map([[610,7],[735,4],[737,6],[3122,9],[3883,1],[90647,7],[95124,1],[95786,9],[95799,7]]);
+ for(const language of ['en','pt-BR']){
+  await setLanguage(language);
+  for(const width of [1440,651,650,390,320]){
+   await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});
+   for(const [id,rows] of cases){
+    await showQuest(id);
+    assert.deepEqual(await ev(layout),{count:1,rows,validRows:true,current:1,highlighted:true,numbered:true,
+     report:id===3883,pageOverflow:false,failures:[]},`${id} at ${width}px (${language})`);
+   }
+  }
+ }
+ // Stress future imports: place names and notes can contain a single long token.
+ await showQuest(95786);
+ await ev(`(() => {const token='FutureImportedLongName'.repeat(10);
+   document.querySelector('#series-steps .current .place').textContent=token;
+   document.querySelector('#series-steps .chain-rule > span').textContent=token;
+   document.querySelector('#series-steps .current strong').textContent=token;
+ })()`);
+ const stress=await ev(layout);
+ assert.deepEqual(stress.failures,[],'Long imported text overflows the chain');
+ assert.equal(stress.pageOverflow,false);
  assert.deepEqual(errors,[]);
  assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
- console.log('Quest chains verified offline: #610 and #735 share one timeline, branch merges are ordered, Explorer’s League has two independent paths, and direct reported links stay visible. Items, locations, NPCs, history, EN/PT-BR and desktop/mobile widths passed.');
+ console.log('Quest chains verified offline: shared timeline, branch order, visible reported links, and safe wrapping of imported text. Nine reference quests at five widths in EN/PT-BR passed, including the 650px breakpoint and 320px mobile.');
 }finally{ws?.close();chrome.kill()}
