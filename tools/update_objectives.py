@@ -6,6 +6,7 @@ SPDX-License-Identifier: GPL-3.0-only
 import argparse
 import json
 import re
+import subprocess
 import sys
 import urllib.request
 from pathlib import Path
@@ -13,7 +14,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HTML = ROOT / 'quest-finder.html'
 REPO = 'tyler3497/forever-quests'
-API = f'https://api.github.com/repos/{REPO}/commits/main'
 RAW = f'https://raw.githubusercontent.com/{REPO}/{{}}/data/quests.json'
 MARKER = re.compile(r'(<script id="quest-data" type="application/json">)(.*?)(</script>)', re.S)
 HEADERS = {'User-Agent': 'WoW-Forever-Quest-Finder/1.0', 'Accept': 'application/vnd.github+json'}
@@ -23,6 +23,19 @@ def get_json(url):
     req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=45) as response:
         return json.load(response)
+
+
+def github_head(repo, branch):
+    # GitHub-hosted runners share unauthenticated REST API rate limits. Resolve
+    # a public Git ref without a token, then pin all raw data reads to that SHA.
+    ref = f'refs/heads/{branch}'
+    result = subprocess.run(['git', 'ls-remote', '--exit-code', '--refs',
+                             f'https://github.com/{repo}.git', ref],
+                            check=True, capture_output=True, text=True, timeout=30)
+    m = re.fullmatch(r'([0-9a-f]{40})\t' + re.escape(ref), result.stdout.strip())
+    if not m:
+        raise ValueError(f'Unexpected Git ref response for {repo}/{branch}')
+    return m[1]
 
 
 def norm_name(value):
@@ -83,7 +96,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--commit', help='Pin a specific 40-character upstream commit; default: current main')
     args = parser.parse_args()
-    commit = args.commit or get_json(API)['sha']
+    commit = args.commit or github_head(REPO, 'main')
     if not re.fullmatch(r'[0-9a-f]{40}', commit):
         raise ValueError('Expected a full lowercase Git commit SHA')
     source = get_json(RAW.format(commit))

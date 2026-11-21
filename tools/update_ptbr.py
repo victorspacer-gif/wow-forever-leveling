@@ -6,10 +6,9 @@ SPDX-License-Identifier: GPL-3.0-only
 import json
 import re
 import sys
-from update_objectives import HTML, MARKER, get_json, norm_name, normalize
+from update_objectives import HTML, MARKER, get_json, github_head, norm_name, normalize
 
 REPO = 'Questie/QuestieDB'
-API = f'https://api.github.com/repos/{REPO}/commits/master'
 RAW = f'https://raw.githubusercontent.com/{REPO}/{{}}/l10n/Forever/lookupQuests/ptBR.lua'
 TRACE = f'https://raw.githubusercontent.com/{REPO}/{{}}/l10n/Forever/traces/lookupQuests/ptBR.lua'
 COMMUNITY = 'https://raw.githubusercontent.com/tyler3497/forever-quests/{}/data/quests.json'
@@ -107,7 +106,7 @@ def update(page, records, community, commit):
 
 def main():
     import urllib.request
-    commit = get_json(API)['sha']
+    commit = github_head(REPO, 'master')
     if not re.fullmatch(r'[0-9a-f]{40}', commit):
         raise ValueError('Invalid QuestieDB commit SHA')
     req = urllib.request.Request(RAW.format(commit), headers={'User-Agent': 'WoW-Forever-Quest-Finder/1.0'})
