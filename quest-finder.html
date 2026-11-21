@@ -35,7 +35,7 @@
     <div class="dual"><label class="field"><span class="label">Faction</span><select id="faction"><option value="">All factions</option><option value="Alliance">Alliance + shared</option><option value="Horde">Horde + shared</option></select></label><label class="field"><span class="label">Coverage</span><select id="scope"><option value="">All quests</option><option value="guide">Guide only</option><option value="linked">Linked only</option></select></label></div>
     <label class="blocks"><input id="blocks" type="checkbox"> Show quests with required chain links</label>
    </form>
-   <p id="item-search-note" class="cmd-help" style="padding:.3rem 1rem">Search items linked to recorded quests; rewards may be choices. Coverage can be incomplete.</p><p id="language-fallback" class="cmd-help" style="padding:.3rem 1rem" hidden>Nomes de missões, NPCs, objetivos e instruções sem tradução permanecem em inglês. Busque por nomes em português, em inglês ou pelo ID.</p><div class="resultbar"><span id="result-count" role="status"></span><span id="shortcut" class="mono" title="Keyboard shortcut">/ to search</span></div>
+   <p id="item-search-note" class="cmd-help" style="padding:.3rem 1rem">Search quest directions and linked items; rewards may be choices. Coverage can be incomplete.</p><p id="language-fallback" class="cmd-help" style="padding:.3rem 1rem" hidden>Nomes de missões, NPCs, objetivos e instruções sem tradução permanecem em inglês. Busque por nomes em português, em inglês ou pelo ID.</p><div class="resultbar"><span id="result-count" role="status"></span><span id="shortcut" class="mono" title="Keyboard shortcut">/ to search</span></div>
    <ul id="results" aria-label="Quest results"></ul>
    <div class="morebar" id="morebar" hidden><button type="button" id="more">More results</button></div>
   </aside>
@@ -67,7 +67,7 @@ const staticUI=()=>{
  text('h1','Quest Finder','Busca de missões');
  [['quest','Quest finder','Busca de missões'],['npc','NPC profiles','Perfis de NPCs'],['guide','Leveling guide','Guia de evolução'],['routes','Zone route','Rota por zonas'],['about','Sources & coverage','Fontes e cobertura']].forEach(([v,en,pt])=>text(`[data-view="${v}"]`,en,pt));
  text('label:has(#search) .label','Quest or item','Missão ou item'); attr('#search','placeholder','Quest, item, ID, zone or NPC','Missão, item, ID, zona ou NPC');
- text('#item-search-note','Search items linked to recorded quests; rewards may be choices. Coverage can be incomplete.','Busque itens ligados às missões registradas; recompensas podem exigir uma escolha. A cobertura pode ser incompleta.');
+ text('#item-search-note','Search quest directions and linked items; rewards may be choices. Coverage can be incomplete.','Busque nas instruções e nos itens vinculados; recompensas podem exigir uma escolha. A cobertura pode ser incompleta.');
  attr('#search-form button','aria-label','Open first matching quest','Abrir a primeira missão encontrada');attr('#search-form button','title','Open first matching quest','Abrir a primeira missão encontrada');
  text('label:has(#faction) .label','Faction','Facção');text('label:has(#scope) .label','Coverage','Cobertura');
  [['#faction option:nth-child(1)','All factions','Todas as facções'],['#faction option:nth-child(2)','Alliance + shared','Aliança + compartilhadas'],['#faction option:nth-child(3)','Horde + shared','Horda + compartilhadas'],['#scope option:nth-child(1)','All quests','Todas as missões'],['#scope option:nth-child(2)','Guide only','Somente do guia'],['#scope option:nth-child(3)','Linked only','Somente vinculadas']].forEach(x=>text(...x));
@@ -102,6 +102,13 @@ const itemRows = new Map(ids.map(id=>{
   }
   return [id,[...merged.values()]];
 }));
+// Index the same directions shown in each language, even when no structured item
+// relation exists. Keep these as text matches, not inferred item relationships.
+const directionRows = new Map(ids.map(id=>{
+  const q=Q[id], en=q.foreverObjectiveSteps || q.objectiveSteps || q.manualObjectiveSteps || [],
+    pt=q.foreverObjectiveStepsPtBR || q.objectiveStepsPtBR || en;
+  return [id,[...new Set([...en,...pt])].map(text=>({text,search:norm(text)}))];
+}));
 const itemRelation=type=>({reward:tr('Quest reward / choice','Recompensa / opção'),choice:tr('Choose one reward','Escolha uma recompensa'),guaranteed:tr('Guaranteed reward','Recompensa garantida'),objective:tr('Quest objective','Objetivo da missão'),start:tr('Starts quest','Inicia a missão'),required:tr('Required item','Item necessário'),provided:tr('Provided by quest','Fornecido pela missão')})[type] || tr('Quest-related item','Item relacionado à missão');
 const itemName=item=>lang==='pt-BR'&&item.namePtBR?item.namePtBR:item.name;
 const suggested = [610,603,166,96393,92422,96984,92458,95682,95775,92065];
@@ -127,16 +134,17 @@ function results(reset=false) {
     const q=Q[id];
     const questMatches=numeric ? String(id)===n : !words.some(w=>!hay.includes(w));
     const itemMatches=n ? (itemRows.get(id)||[]).filter(item=>numeric?String(item.id)===n:words.every(w=>item.search.includes(w))) : [];
-    if(!questMatches && !itemMatches.length) continue;
+    const directionMatches=n && !numeric ? (directionRows.get(id)||[]).filter(step=>words.every(w=>step.search.includes(w))) : [];
+    if(!questMatches && !itemMatches.length && !directionMatches.length) continue;
     if(side && (q.side?.startsWith('Alliance') || q.side?.startsWith('Horde')) && !q.side.startsWith(side)) continue;
     if(scope==='guide'&&!q.guide || scope==='linked'&&q.guide || only&&!pre(id).some(e=>hard(e[1]))&&!after(id).some(e=>hard(e[1]))) continue;
     const featured=suggested.indexOf(id);
-    const rank=!words.length?(featured>=0?featured:100+(!q.guide?1:0)):questMatches?(numeric?0:name===n?0:name.startsWith(n)?1:words.every(w=>name.includes(w))?2:4):3;
-    matches.push([id,rank,itemMatches]);
+    const rank=!words.length?(featured>=0?featured:100+(!q.guide?1:0)):questMatches?(numeric?0:name===n?0:name.startsWith(n)?1:words.every(w=>name.includes(w))?2:4):itemMatches.length?3:5;
+    matches.push([id,rank,itemMatches,directionMatches]);
   }
   matches.sort((a,b)=>a[1]-b[1] || (words.length ? Q[a[0]].name.localeCompare(Q[b[0]].name) || a[0]-b[0] : ord(a[0],b[0])));
   $('result-count').textContent=`${nf.format(matches.length)} ${tr(matches.length===1?'quest':'quests',matches.length===1?'missão':'missões')}`;
-  $('results').innerHTML=matches.slice(0,limit).map(([id,,items])=>`<li><a class="result" href="#quest=${id}" data-quest="${id}"${id===chosen?' aria-current="true"':''}><strong>${escape(questName(Q[id]))}</strong><span class="id">#${id}</span><small>${escape(subtext(Q[id]))}${done.has(id)?tr(' · ✓ Done',' · ✓ Concluída'):''}</small>${items.slice(0,3).map(item=>`<small class="item-match">${escape(itemRelation(item.relation))}: <b>${escape(itemName(item))}</b> <span class="id">#${escape(item.id)}</span></small>`).join('')}${items.length>3?`<small class="item-match">${tr('More matching items','Mais itens correspondentes')}: ${items.length-3}</small>`:''}</a></li>`).join('') || `<li class="results-empty">${tr('No matches. Try fewer words or clear a filter.','Nenhum resultado. Tente menos palavras ou limpe um filtro.')}</li>`;
+  $('results').innerHTML=matches.slice(0,limit).map(([id,,items,directions])=>`<li><a class="result" href="#quest=${id}" data-quest="${id}"${id===chosen?' aria-current="true"':''}><strong>${escape(questName(Q[id]))}</strong><span class="id">#${id}</span><small>${escape(subtext(Q[id]))}${done.has(id)?tr(' · ✓ Done',' · ✓ Concluída'):''}</small>${items.slice(0,3).map(item=>`<small class="item-match">${escape(itemRelation(item.relation))}: <b>${escape(itemName(item))}</b> <span class="id">#${escape(item.id)}</span></small>`).join('')}${directions.length?`<small class="item-match">${tr('Mentioned in directions','Mencionado nas instruções')}: ${escape(directions[0].text)}</small>`:''}${items.length>3?`<small class="item-match">${tr('More matching items','Mais itens correspondentes')}: ${items.length-3}</small>`:''}</a></li>`).join('') || `<li class="results-empty">${tr('No matches. Try fewer words or clear a filter.','Nenhum resultado. Tente menos palavras ou limpe um filtro.')}</li>`;
   $('morebar').hidden=matches.length<=limit;
   if(reset) $('results').scrollTop=0;
 }

@@ -64,6 +64,20 @@ assert.match(await evaluate(`document.querySelector('#next-panel').textContent`)
 if(process.env.TMPDIR){const png=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.TMPDIR,'wff-quest-finder-desktop.png'),Buffer.from(png.data,'base64'));}
 const search=async text=>evaluate(`(()=>{const n=document.getElementById('search');n.value=${JSON.stringify(text)};n.dispatchEvent(new Event('input',{bubbles:true}));return [...document.querySelectorAll('#results [data-quest]')].map(e=>+e.dataset.quest)})()`);
 const click=s=>evaluate(`document.querySelector(${JSON.stringify(s)}).click()`);
+assert.ok((await search('Bamboo Cage Key')).includes(2969));
+assert.match(await evaluate(`document.querySelector('#results [data-quest="2969"]').textContent`),/Mentioned in directions:.*Bamboo Cage Key/);
+await click('#results [data-quest="2969"]');
+assert.match(await evaluate(`document.querySelector('#quest-objectives').textContent`),/Bamboo Cage Key/);
+for(const [term,id] of [['Pendant of the Sea Lion',31],['Water Elemental Bracers',602],['Field Testing Kit',864]]) {
+  assert.ok((await search(term)).includes(id),`${term} should find quest #${id}`);
+}
+const coverage=await evaluate(`(()=>{const quests=JSON.parse(document.querySelector('#quest-data').textContent).quests, misses=[]; let checked=0; for(const [id,q] of Object.entries(quests)){const steps=q.foreverObjectiveSteps||q.objectiveSteps||q.manualObjectiveSteps||[]; if(!steps[0] || steps[0].length<35 || checked>=30)continue; const e=document.querySelector('#search');e.value=steps[0];e.dispatchEvent(new Event('input',{bubbles:true}));if(!document.querySelector('#results [data-quest="'+id+'"]'))misses.push(id);checked++;}return {checked,misses};})()`);
+assert.equal(coverage.checked,30); assert.deepEqual(coverage.misses,[],'representative displayed directions must be searchable');
+await evaluate(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+assert.ok((await search('Chave da Gaiola de Bambu')).includes(2969));
+assert.match(await evaluate(`document.querySelector('#results [data-quest="2969"]').textContent`),/Mencionado nas instruções/);
+assert.ok((await search('Bamboo Cage Key')).includes(2969),'English directions remain searchable in Portuguese');
+await evaluate(`(()=>{const e=document.querySelector('#language');e.value='en';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
 assert.ok((await search('Carrot on a Stick')).includes(2770));
 assert.match(await evaluate(`document.querySelector('#results [data-quest="2770"]').textContent`),/Quest reward \/ choice: Carrot on a Stick/);
 await click('#results [data-quest="2770"]');
