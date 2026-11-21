@@ -55,6 +55,7 @@ jobs:
         run: |
           export CHROMIUM="$(command -v google-chrome)"
           test -n "$CHROMIUM"
+          export TMPDIR="$RUNNER_TEMP"
           bash tools/check-quest-finder.sh
       - name: Save the tested import for commit
         if: steps.refresh.outputs.sha256 != ''

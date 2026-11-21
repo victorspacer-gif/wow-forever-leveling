@@ -5,15 +5,13 @@ import { setTimeout as wait } from 'node:timers/promises';
 import { join } from 'node:path';
 const profile=await mkdtemp(join(process.env.TMPDIR || process.cwd(),'quest-finder-chromium-'));
 const path=new URL('../quest-finder.html',import.meta.url).href;
-// On Linux Unix-domain socket addresses have a small fixed-length limit.
-// Chromium can reach the same scratch directory through its own short cwd alias.
-const childEnv=process.platform==='linux'?{...process.env,TMPDIR:'/proc/self/cwd'}:process.env;
-const chrome=spawn(process.env.CHROMIUM||'chromium',['--headless','--disable-gpu','--disable-background-networking','--no-first-run',`--user-data-dir=${profile}`,'--remote-debugging-address=127.0.0.1','--remote-debugging-port=0','about:blank'],{cwd:profile,env:childEnv,stdio:['ignore','ignore','pipe']});
+
+const chrome=spawn(process.env.CHROMIUM||'chromium',['--headless','--disable-gpu','--disable-background-networking','--no-first-run',`--user-data-dir=${profile}`,'--remote-debugging-address=127.0.0.1','--remote-debugging-port=0','about:blank'],{cwd:profile,stdio:['ignore','ignore','pipe']});
 let chromeLog='';chrome.stderr.on('data',v=>{chromeLog=(chromeLog+v).slice(-4000);});
 let ws;
 try {
 let port;
-for(let i=0;i<100;i++){
+for(let i=0;i<250;i++){
   try{port=(await readFile(join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0];break;}catch{}
   if(chrome.exitCode!==null)throw Error(chromeLog);
   await wait(100);

@@ -4,11 +4,10 @@ import {mkdtemp,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {setTimeout as wait} from 'node:timers/promises';
 const profile=await mkdtemp(join(process.env.TMPDIR||process.cwd(),'npc-chrome-'));
-const env=process.platform==='linux'?{...process.env,TMPDIR:'/proc/self/cwd'}:process.env;
-const chrome=spawn(process.env.CHROMIUM||'chromium',['--headless','--disable-gpu','--disable-background-networking','--no-first-run',`--user-data-dir=${profile}`,'--remote-debugging-port=0','about:blank'],{cwd:profile,env,stdio:['ignore','ignore','pipe']});
+const chrome=spawn(process.env.CHROMIUM||'chromium',['--headless','--disable-gpu','--disable-background-networking','--no-first-run',`--user-data-dir=${profile}`,'--remote-debugging-address=127.0.0.1','--remote-debugging-port=0','about:blank'],{cwd:profile,stdio:['ignore','ignore','pipe']});
 let log='';chrome.stderr.on('data',x=>log+=x);let ws;
 try{
- let port;for(let i=0;i<100;i++){try{port=(await readFile(join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0];break}catch{}if(chrome.exitCode!==null)throw Error(log);await wait(100)}
+ let port;for(let i=0;i<250;i++){try{port=(await readFile(join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0];break}catch{}if(chrome.exitCode!==null)throw Error(log);await wait(100)}
  assert.ok(port,log);const targets=await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise((a,b)=>{ws.addEventListener('open',a,{once:true});ws.addEventListener('error',b,{once:true})});
  const pending=new Map(),errors=[],requests=[];let serial=0;ws.addEventListener('message',e=>{const d=JSON.parse(e.data);if(d.id){const cb=pending.get(d.id);pending.delete(d.id);d.error?cb?.[1](Error(d.error.message)):cb?.[0](d.result)}if(d.method==='Runtime.exceptionThrown')errors.push(d.params.exceptionDetails.exception?.description||d.params.exceptionDetails.text);if(d.method==='Network.requestWillBeSent')requests.push(d.params.request.url)});
  const send=(method,params={})=>new Promise((a,b)=>{const id=++serial;pending.set(id,[a,b]);ws.send(JSON.stringify({id,method,params}))});
