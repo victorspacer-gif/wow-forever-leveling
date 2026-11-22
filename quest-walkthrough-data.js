@@ -53,6 +53,15 @@ globalThis.QUEST_WALKTHROUGHS = {
     ],
     "sources": [["Wowhead · Forever quest", "https://www.wowhead.com/forever/quest=2750/a-bad-egg"], ["WCLBox · Curgle's location and reward", "https://wowforever.wclbox.com/en/renwu/2750"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
   },
+  "3161": {
+    "name": "Gahz'ridian",
+    "steps": [
+      ["Marvon Rivetseeker gives you the Gahz'ridian Detector when you accept the quest. Equip the helmet in your head slot to make nearby deposits appear on your minimap; leaving it in your bags won't enable tracking.", "Marvon Rivetseeker entrega o Detector de Gahz'ridian quando você aceita a missão. Equipe o elmo no espaço de cabeça para ver os depósitos próximos no minimapa; deixar o item na bolsa não ativa o rastreamento."],
+      ["Click the small, pale sand mounds in southern Tanaris to loot 30 Gahz'ridian Ornaments. Try Eastmoon Ruins around (46, 65). If you spot a mound yourself, you can loot it without wearing the helmet.", "Clique nos pequenos montes claros de areia no sul de Tanaris para coletar 30 Ornamentos de Gahz'ridian. Procure nas Ruínas de Eastmoon, perto de (46, 65). Se encontrar um monte sem o detector, você pode saqueá-lo sem o elmo."],
+      ["Return to Marvon at Broken Pillar (52.7, 45.9) with the ornaments and the detector. Keep the helmet for the turn-in.", "Volte a Marvon no Pilar Partido (52.7, 45.9) com os ornamentos e o detector. Guarde o elmo para a entrega."]
+    ],
+    "sources": [["Wowhead · Forever quest", "https://www.wowhead.com/forever/quest=3161/gahzridian"], ["Wowhead · Detector head slot and equip effect", "https://www.wowhead.com/forever/item=9978/gahzridian-detector"], ["Wowhead · Player-reported mound locations", "https://www.wowhead.com/forever/quest=3161/gahzridian#comments"], ["UrGameTips · Forever collection route", "https://urgametips.com/wow-forever/quest-guides/gahzridian-ornaments-detector-tanaris/"]]
+  },
   "4512": {
     "name": "A Little Slime Goes a Long Way",
     "steps": [

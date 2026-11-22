@@ -151,6 +151,18 @@ for (const [id,en,pt] of eggCases){
 const eggMatches=await search('The Super Egg-O-Matic');
 assert.ok([2741,8893].every(id=>eggMatches.includes(id)));
 await search('');
+await evaluate('location.hash="#quest=3161"');
+await until(`document.querySelector('#quest-command')?.value.endsWith('(3161))')`);
+assert.equal(await evaluate(`document.querySelector('${walk} h3')?.innerText`),'What to do');
+assert.match(await evaluate(`document.querySelector('${walk} li')?.innerText`), /Gahz'ridian Detector.+Equip the helmet in your head slot.+minimap/s);
+assert.match(await evaluate(walkText), /loot it without wearing the helmet/);
+assert.ok(await evaluate(`!!document.querySelector('${walk} a[href*="item=9978"]')`));
+assert.ok((await search("Gahz'ridian Detector")).includes(3161));
+await search('');
+await evaluate(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+assert.equal(await evaluate(`document.querySelector('${walk} h3')?.innerText`),'O que fazer');
+assert.match(await evaluate(`document.querySelector('${walk} li')?.innerText`), /Detector de Gahz'ridian.+Equipe o elmo no espaço de cabeça.+minimapa/s);
+await evaluate(`(()=>{const e=document.querySelector('#language');e.value='en';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
 await evaluate('location.hash="#quest=93404"');
 await until(`document.querySelector('${walk} li')?.textContent.includes('Woodwyrd')`);
 assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /east side, under the stone bridge.+left of Woodwyrd/s);
