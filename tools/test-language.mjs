@@ -119,7 +119,36 @@ assert.equal(await evaluate(`!!document.querySelector('.guide-step.is-target [da
 await send('Page.navigate',{url:new URL('../leveling-guide.html',import.meta.url).href});
 await until(`location.hash==='#guide' && document.querySelector('#guide-view')?.hidden===false && /Leveling Guide/.test(document.title)`);
 assert.match(await evaluate('document.title'),/Leveling Guide/);
+const walk='#quest-walkthrough';
+await evaluate('location.hash="#quest=93404"');
+await until(`document.querySelector('${walk} li')?.textContent.includes('Woodwyrd')`);
+assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /east side, under the stone bridge.+left of Woodwyrd/s);
+assert.deepEqual(await evaluate(`[...document.querySelectorAll('${walk} .walkthrough-video a')].map(a=>a.href)`),['https://www.youtube.com/watch?v=vOl_PqJOqpQ','https://www.youtube.com/watch?v=YljPMrVgQoc']);
+assert.match(await evaluate(`document.querySelectorAll('${walk} .walkthrough-video')[1].textContent`), /Related gameplay.*Bue/);
+assert.equal(await evaluate(`document.querySelector('#quest-objectives')?.textContent.includes('Steps not available') || false`),false);
+assert.ok((await search('Vial of Earth Song Water')).includes(93404));
+await search('');
+await send('Emulation.setDeviceMetricsOverride',{width:320,height:844,deviceScaleFactor:1,mobile:true});
+await evaluate(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /Onde ir e onde clicar.+sob a ponte de pedra/s);
+assert.ok((await search('gêiser')).includes(93404));
+await search('');
+assert.equal(await evaluate(`Array.from(document.querySelectorAll('${walk}, ${walk} *')).every(el=>{const r=el.getBoundingClientRect();return r.left>=-1 && r.right<=innerWidth+1})`),true);
+if(process.env.TMPDIR){await evaluate(`document.querySelector('${walk}').scrollIntoView()`);const png=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.TMPDIR,'wff-quest-walkthrough-mobile.png'),Buffer.from(png.data,'base64'));}
+await evaluate('location.hash="#quest=93606"');
+await until(`document.querySelector('${walk} a')?.href.endsWith('&t=70s')`);
+assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /Trecho da missão/);
+assert.ok(await evaluate(`document.querySelector('#quest-objectives') !== null`));
+await evaluate('location.hash="#quest=93609"');
+await until(`document.querySelector('${walk} a')?.href.endsWith('&t=304s')`);
+await evaluate('location.hash="#quest=93604"');
+await until(`document.querySelector('${walk}')?.textContent.includes('não entre na instância')`);
+assert.equal(await evaluate(`document.querySelector('${walk} .walkthrough-video')`),null);
+await evaluate('location.hash="#quest=651"');
+await until(`document.querySelector('${walk}')?.textContent.includes('sem confirmação independente no Forever')`);
+await evaluate('location.hash="#quest=610"');
+await until(`document.querySelector('${walk}')===null && !!document.querySelector('#quest-objectives')`);
 assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
 assert.deepEqual(errors,[]);
-console.log('Chromium validated offline: quest search/chain and local completion; per-ID WoW command and copy; exact dungeon and leveling route jumps; alternate Duncan step; route checklist persistence and Back; dungeon-only fallback and standalone shortcut; mobile fit; zero console errors and remote requests.');
+console.log('Chromium validated offline: search and chains; progression and guide routes; EN/PT-BR walkthroughs and direction search; exact video IDs and chapter times; 320px fit; zero console errors and remote requests.');
 } finally {ws?.close();chrome.kill();}
