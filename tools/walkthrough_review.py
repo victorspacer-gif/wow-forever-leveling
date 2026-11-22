@@ -9,6 +9,8 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 VIDEO_ID = re.compile(r'[A-Za-z0-9_-]{11}\Z')
+EXCLUDED_CREATORS = {'myspaceguide'}
+EXCLUDED_VIDEOS = {'vOl_PqJOqpQ'}
 FOREVER = re.compile(r'\b(?:wow|world of warcraft|warcraft)\s*forever\b|\bforever\s*wow\b')
 OTHER_EDITION = re.compile(r'\b(?:retail|turtle wow|season of discovery|season of mastery|sod|classic era)\b')
 OBJECT_ACTION = re.compile(r'\b(?:interact|click|activate|extinguish|open|unlock|repair|loot|recover|gather|'
@@ -33,6 +35,12 @@ def normalize(text):
 
 def phrase(needle, haystack):
     return bool(needle and f' {needle} ' in f' {haystack} ')
+
+
+def excluded_video(video):
+    return video.get('id') in EXCLUDED_VIDEOS or any(
+        normalize(urlsplit(video.get(key) or '').path).replace(' ', '') in EXCLUDED_CREATORS
+        for key in ('creator', 'creatorUrl'))
 
 
 def load_data(root=ROOT):
@@ -62,6 +70,8 @@ def check_guides(quests, guides):
             v = guide.get(field)
             if v is None:
                 continue
+            if excluded_video(v):
+                errors.append(f'#{id}: {field} is from an excluded channel')
             if (not VIDEO_ID.fullmatch(v.get('id', '')) or not all(v.get(k, '').strip()
                 for k in ('title', 'creator', 'evidence')) or v.get('coverage') not in types):
                 errors.append(f'#{id}: {field} must have an ID, title, creator, review evidence, and valid coverage type')
@@ -105,7 +115,7 @@ def video_candidates(quests, catalog):
     for row in catalog:
         video_id = row.get('id', '')
         title = normalize(row.get('title', ''))
-        if not VIDEO_ID.fullmatch(video_id) or not title or OTHER_EDITION.search(title):
+        if not VIDEO_ID.fullmatch(video_id) or not title or OTHER_EDITION.search(title) or excluded_video(row):
             continue
         page_id = str(row.get('wowheadQuestId', ''))
         context = normalize(row.get('description', '')) + ' ' + ' '.join(map(normalize, row.get('chapters', [])))

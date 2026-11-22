@@ -17,7 +17,7 @@ class WalkthroughTest(unittest.TestCase):
         by_id = {r['id']: r for r in rows}
         self.assertIn('action-and-landmark-in-objective', by_id[651]['signals'])
         self.assertIn('no-objective-text', signals({}, []))
-        self.assertTrue(by_id[93404]['hasVideo'])
+        self.assertFalse(by_id[93404]['hasVideo'])  # related gameplay isn't a complete walkthrough
         self.assertFalse(by_id[93604]['hasVideo'])  # old dungeon video must not be served as current
 
     def test_disambiguates_actual_forever_video_candidates(self):
@@ -47,6 +47,17 @@ class WalkthroughTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'chapter requires') as err:
             check_guides(self.quests, {'93606': bad})
         self.assertIn('no matching quest ID and name', str(err.exception))
+
+    def test_excludes_channel_from_discovery_and_publication(self):
+        bue = self.guides['93404']['relatedVideo']
+        excluded = [dict(bue, id='vOl_PqJOqpQ', creator=None),
+                    dict(bue, id='aaaaaaaaaaa', creator='My Space Guide'),
+                    dict(bue, id='bbbbbbbbbbb', creator='Other', creatorUrl='https://www.youtube.com/@MySpaceGuide')]
+        matched = video_candidates(self.quests, [bue, *(dict(v, wowheadQuestId='93404') for v in excluded)])
+        self.assertEqual([v['id'] for v in matched['93404']], [bue['id']])
+        for v in excluded:
+            with self.assertRaisesRegex(ValueError, 'excluded channel'):
+                check_guides(self.quests, {'93404': dict(self.guides['93404'], relatedVideo=dict(v, creator=v['creator'] or 'Unknown'))})
 
 
 if __name__ == '__main__':

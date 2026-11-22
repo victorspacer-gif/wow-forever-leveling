@@ -46,7 +46,7 @@ globalThis.QUEST_WALKTHROUGHS = {
       ["Leave the dungeon and return to the Forlorn Gardens. Use the vial from your bags beside the large burning treant to the left of Woodwyrd, not on the quest-giver. Then turn in to Woodwyrd.", "Saia da masmorra e volte aos Jardins Lugubres. Use o frasco da bolsa junto à árvore gigante em chamas, à esquerda de Woodwyrd, não no NPC que deu a missão. Depois, entregue a missão a Woodwyrd."]
     ],
     "sources": [["Wowhead · Player directions", "https://www.wowhead.com/forever/quest=93404/rot-and-regret#comments"], ["Wowhead · Video on this exact quest", "https://www.wowhead.com/forever/quest=93404/rot-and-regret#videos:id=446340"]],
-    "video": {"id":"vOl_PqJOqpQ","creator":"MySpaceGuide","title":"Rot and Regret Guide - WoW Forever","coverage":"walkthrough","evidence":"Exact title and edition. The transcript explains the prerequisite and Woodwyrd location, Maraudon geyser, and use of the vial on the burning tree to complete the quest."},
+
     "relatedVideo": {"id":"YljPMrVgQoc","creator":"Bue","title":"Rot and Regret, WoW Forever Quest","coverage":"gameplay","evidence":"User recommendation; linked under Videos on the exact Forever quest #93404. Title, creator and opening Maraudon gameplay are confirmed; full start-to-finish coverage was not verified."}
   },
   "93450": {
