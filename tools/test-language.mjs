@@ -133,6 +133,7 @@ const walkText=`document.querySelector('${walk}')?.innerText`;
 for (const [id,en,pt] of eggCases){
   await evaluate(`location.hash='#quest=${id}'`);
   await until(`document.querySelector('#quest-command')?.value.endsWith('(${id}))') && !!document.querySelector('${walk} li')`);
+  assert.equal(await evaluate(`document.querySelector('${walk} h3')?.innerText`),'What to do');
   assert.match(await evaluate(walkText),en);
   assert.ok(await evaluate(`[...document.querySelectorAll('${walk} .walkthrough-sources a')].some(a=>a.href.includes('/quest=${id}/'))`));
   if(id===2741){
@@ -142,10 +143,10 @@ for (const [id,en,pt] of eggCases){
     assert.deepEqual(await evaluate(`[...document.querySelectorAll('#pre-panel a[data-quest]')].filter(a=>a.getClientRects().length).map(a=>Number(a.dataset.quest))`),[2741]);
   }
   await evaluate(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-  await until(`(${walkText})?.includes('Onde ir e onde clicar')`);
+  await until(`document.querySelector('${walk} h3')?.innerText==='O que fazer'`);
   assert.match(await evaluate(walkText),pt);
   await evaluate(`(()=>{const e=document.querySelector('#language');e.value='en';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-  await until(`(${walkText})?.includes('Where to go and what to click')`);
+  await until(`document.querySelector('${walk} h3')?.innerText==='What to do'`);
 }
 const eggMatches=await search('The Super Egg-O-Matic');
 assert.ok([2741,8893].every(id=>eggMatches.includes(id)));
@@ -160,7 +161,7 @@ assert.ok((await search('Vial of Earth Song Water')).includes(93404));
 await search('');
 await send('Emulation.setDeviceMetricsOverride',{width:320,height:844,deviceScaleFactor:1,mobile:true});
 await evaluate(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /Onde ir e onde clicar.+sob a ponte de pedra/s);
+assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /O que fazer.+sob a ponte de pedra/s);
 assert.ok((await search('gêiser')).includes(93404));
 await search('');
 assert.equal(await evaluate(`Array.from(document.querySelectorAll('${walk}, ${walk} *')).every(el=>{const r=el.getBoundingClientRect();return r.left>=-1 && r.right<=innerWidth+1})`),true);
@@ -168,7 +169,8 @@ if(process.env.TMPDIR){await evaluate(`document.querySelector('${walk}').scrollI
 await evaluate('location.hash="#quest=93606"');
 await until(`document.querySelector('${walk} a')?.href.endsWith('&t=70s')`);
 assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /Trecho da missão/);
-assert.ok(await evaluate(`document.querySelector('#quest-objectives') !== null`));
+assert.equal(await evaluate(`document.querySelector('#quest-objectives h3')?.innerText`),'Objetivos da missão');
+assert.equal(await evaluate(`[...document.querySelectorAll('#detail h3')].filter(h=>h.innerText==='O que fazer').length`),1);
 await evaluate('location.hash="#quest=93609"');
 await until(`document.querySelector('${walk} a')?.href.endsWith('&t=304s')`);
 await evaluate('location.hash="#quest=93604"');
@@ -178,6 +180,7 @@ await evaluate('location.hash="#quest=651"');
 await until(`document.querySelector('${walk}')?.textContent.includes('sem confirmação independente no Forever')`);
 await evaluate('location.hash="#quest=610"');
 await until(`document.querySelector('${walk}')===null && !!document.querySelector('#quest-objectives')`);
+assert.equal(await evaluate(`document.querySelector('#quest-objectives h3')?.innerText`),'O que fazer');
 assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
 assert.deepEqual(errors,[]);
 console.log('Chromium validated offline: search and chains; progression and guide routes; EN/PT-BR walkthroughs and direction search; exact video IDs and chapter times; 320px fit; zero console errors and remote requests.');
