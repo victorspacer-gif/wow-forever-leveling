@@ -11,6 +11,48 @@ globalThis.QUEST_WALKTHROUGHS = {
     ],
     "sources": [["Wowhead · Classic player directions", "https://www.wowhead.com/forever/quest=651/stones-of-binding#comments"], ["60.tools · Quest objectives", "https://www.60.tools/quests/651-stones-of-binding"]]
   },
+  "2741": {
+    "name": "The Super Egg-O-Matic",
+    "steps": [
+      ["The first turn-in is #2741, available at level 42 to both factions. Get the Hippogryph Egg first: you can loot it without accepting anything in Gadgetzan.", "A primeira entrega é a #2741, disponível a partir do nível 42 para as duas facções. Pegue primeiro o Ovo de Hipogrifo: não é preciso aceitar nada em Geringontzan antes de saquear o ovo."],
+      ["In southern Feralas, go uphill behind the Ruins of Isildien into the Frayfeather Highlands. Click a nest on the ground; the egg is not a mob drop. Try (58.0, 76.3), or check the slopes near (55.9, 76.0) and (57.0, 78.2) if the first spot is empty. You can carry one Hippogryph Egg at a time.", "No sul de Feralas, suba a encosta atrás das Ruínas de Isildien, na região de Frayfeather Highlands. Clique em um ninho no chão; o ovo não cai dos inimigos. Tente (58.0, 76.3) ou procure nas encostas perto de (55.9, 76.0) e (57.0, 78.2) se o primeiro ponto estiver vazio. Você só pode carregar um Ovo de Hipogrifo por vez."],
+      ["With the egg in your bags, click the Egg-O-Matic machine at (52.4, 27.0) in Gadgetzan, Tanaris. Use the machine, not the gnome next to it. Hand in the egg to receive an Egg Crate.", "Com o ovo na bolsa, clique na máquina Ovomático em Geringontzan, Tanaris (52.4, 27.0). Use a máquina, não a gnoma ao lado. Entregue o ovo para receber uma Caixa de Ovos."],
+      ["Right-click the Egg Crate in your bags. It gives one random egg: Extraordinary (#2747), Fine (#2748), Ordinary (#2749), or Bad (#2750). Talk to Curgle Cranklehop beside the machine and choose the turn-in that matches your egg. The four quests have no required order; bring another Hippogryph Egg to the repeatable machine quest (#8893) for another roll.", "Clique com o botão direito na Caixa de Ovos na bolsa. Ela dá um ovo aleatório: Extraordinário (#2747), Fecundo (#2748), Comum (#2749) ou Gorado (#2750). Fale com Curgle Cranklehop, ao lado da máquina, e escolha a entrega que corresponde ao seu ovo. Não há ordem obrigatória entre as quatro missões; leve outro Ovo de Hipogrifo à máquina na missão repetível (#8893) para tentar de novo."]
+    ],
+    "sources": [["Wowhead · Forever quest and unlocks", "https://www.wowhead.com/forever/quest=2741/the-super-egg-o-matic"], ["UrGameTips · Nest and machine route", "https://urgametips.com/wow-forever/quest-guides/super-egg-o-matic-hippogriff-egg/"], ["Wowhead · Classic player-reported nest spots and pickup", "https://www.wowhead.com/forever/quest=2750/a-bad-egg#comments"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
+  },
+  "2747": {
+    "name": "An Extraordinary Egg",
+    "steps": [
+      ["Finish The Super Egg-O-Matic (#2741), then right-click the Egg Crate in your bags. This turn-in needs the Extraordinary Egg from the crate, not the raw Hippogryph Egg from Feralas.", "Conclua O super ovomático (#2741) e clique com o botão direito na Caixa de Ovos na bolsa. Esta entrega pede o Ovo Extraordinário da caixa, não o Ovo de Hipogrifo coletado em Feralas."],
+      ["If you got an Extraordinary Egg, give it to Curgle Cranklehop beside the machine in Gadgetzan, Tanaris, around (52.4, 26.9) to get a Box of Goodies. If you got another quality, use its matching turn-in. Bring a fresh Hippogryph Egg to the machine (#8893) for another chance.", "Se saiu um Ovo Extraordinário, entregue-o a Curgle Cranklehop, ao lado da máquina em Geringontzan, Tanaris, perto de (52.4, 26.9), para receber a recompensa. Se saiu outro ovo, faça a entrega correspondente. Leve outro Ovo de Hipogrifo à máquina (#8893) para tentar de novo."]
+    ],
+    "sources": [["Wowhead · Forever quest and reward", "https://www.wowhead.com/forever/quest=2747/an-extraordinary-egg"], ["WCLBox · Curgle's location", "https://wowforever.wclbox.com/en/renwu/2747"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
+  },
+  "2748": {
+    "name": "A Fine Egg",
+    "steps": [
+      ["Finish The Super Egg-O-Matic (#2741). Right-click the Egg Crate in your bags and check for a Fine Egg. It comes from the crate, not directly from a Feralas nest.", "Conclua O super ovomático (#2741). Clique com o botão direito na Caixa de Ovos na bolsa e veja se saiu um Ovo Fecundo. Ele vem da caixa, não diretamente de um ninho em Feralas."],
+      ["Give the Fine Egg to Curgle Cranklehop beside the machine in Gadgetzan, Tanaris, around (52.4, 26.9) for a Box of Spells. If you rolled a different egg, hand it in under its own quest and use the machine again (#8893) with a fresh Hippogryph Egg.", "Entregue o Ovo Fecundo a Curgle Cranklehop, ao lado da máquina em Geringontzan, Tanaris, perto de (52.4, 26.9). Se saiu outro ovo, entregue-o na missão correspondente e use a máquina de novo (#8893) com outro Ovo de Hipogrifo."]
+    ],
+    "sources": [["Wowhead · Forever quest and reward", "https://www.wowhead.com/forever/quest=2748/a-fine-egg"], ["WCLBox · Curgle's location", "https://wowforever.wclbox.com/en/renwu/2748"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
+  },
+  "2749": {
+    "name": "An Ordinary Egg",
+    "steps": [
+      ["Finish The Super Egg-O-Matic (#2741) and right-click the Egg Crate in your bags. This quest takes an Ordinary Egg from the crate, not the raw Hippogryph Egg.", "Conclua O super ovomático (#2741) e clique com o botão direito na Caixa de Ovos na bolsa. Esta missão pede o Ovo Comum da caixa, não o Ovo de Hipogrifo coletado no ninho."],
+      ["Give the Ordinary Egg to Curgle Cranklehop beside the machine in Gadgetzan, Tanaris, around (52.4, 26.9) for a Box of Rations. If the crate gave you another quality, choose its matching turn-in or bring another Hippogryph Egg to the machine (#8893) to try again.", "Entregue o Ovo Comum a Curgle Cranklehop, ao lado da máquina em Geringontzan, Tanaris, perto de (52.4, 26.9), para receber uma Caixa de Rações. Se saiu outro ovo, escolha a entrega correspondente ou leve outro Ovo de Hipogrifo à máquina (#8893) para tentar de novo."]
+    ],
+    "sources": [["Wowhead · Forever quest and reward", "https://www.wowhead.com/forever/quest=2749/an-ordinary-egg"], ["WCLBox · Curgle's location", "https://wowforever.wclbox.com/en/renwu/2749"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
+  },
+  "2750": {
+    "name": "A Bad Egg",
+    "steps": [
+      ["Finish The Super Egg-O-Matic (#2741) and right-click the Egg Crate in your bags. A Bad Egg is one of the four results; it is still a valid quest turn-in.", "Conclua O super ovomático (#2741) e clique com o botão direito na Caixa de Ovos na bolsa. O Ovo Gorado é um dos quatro resultados e ainda pode ser entregue numa missão."],
+      ["Give the Bad Egg to Curgle Cranklehop beside the machine in Gadgetzan, Tanaris, around (52.4, 26.9) for 9 silver. If you got a different egg, choose its matching turn-in. To try again, bring a fresh Hippogryph Egg to the repeatable machine quest (#8893).", "Entregue o Ovo Gorado a Curgle Cranklehop, ao lado da máquina em Geringontzan, Tanaris, perto de (52.4, 26.9), por 9 pratas. Se saiu outro ovo, escolha a entrega correspondente. Para tentar de novo, leve outro Ovo de Hipogrifo à máquina na missão repetível (#8893)."]
+    ],
+    "sources": [["Wowhead · Forever quest", "https://www.wowhead.com/forever/quest=2750/a-bad-egg"], ["WCLBox · Curgle's location and reward", "https://wowforever.wclbox.com/en/renwu/2750"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
+  },
   "4512": {
     "name": "A Little Slime Goes a Long Way",
     "steps": [
@@ -27,6 +69,15 @@ globalThis.QUEST_WALKTHROUGHS = {
       ["Find Muculent Oozes in Un'Goro Crater, for example around (72.6, 39.4). Kill an ooze, target the corpse, then use an Empty Pure Sample Jar. Repeat until you have 10 Filled Pure Sample Jars and turn them in to Laris.", "Procure as gosmas na Cratera Un'Goro, por exemplo perto de (72.6, 39.4). Mate uma gosma, selecione o corpo e use um frasco de amostra pura vazio. Repita até encher dez frascos e entregue-os a Laris."]
     ],
     "sources": [["URGametips · Forever route and landmarks", "https://urgametips.com/wow-forever/quest-guides/a-little-slime-goes-a-long-way-pure-samples/"], ["Wowhead · Un'Goro stage", "https://www.wowhead.com/forever/quest=4513"]]
+  },
+  "8893": {
+    "name": "The Super Egg-O-Matic",
+    "steps": [
+      ["This is the repeatable turn-in. Finish the first The Super Egg-O-Matic (#2741) once; you do not need to complete any of Curgle's egg turn-ins to use the machine again.", "Esta é a entrega repetível. Conclua O super ovomático (#2741) uma vez; não é preciso fazer nenhuma entrega de ovo da Curgle para usar a máquina de novo."],
+      ["Loot another Hippogryph Egg from a ground nest in the Frayfeather Highlands, south of the Ruins of Isildien in Feralas. Start around (58.0, 76.3). You can carry one at a time.", "Pegue outro Ovo de Hipogrifo num ninho no chão em Frayfeather Highlands, ao sul das Ruínas de Isildien em Feralas. Comece perto de (58.0, 76.3). Você só pode carregar um por vez."],
+      ["Click the Egg-O-Matic in Gadgetzan, Tanaris (52.4, 27.0) to exchange it for another Egg Crate. Right-click the crate and give the resulting egg to Curgle Cranklehop beside the machine through the matching quest.", "Clique no Ovomático em Geringontzan, Tanaris (52.4, 27.0), para trocar o ovo por outra Caixa de Ovos. Clique com o botão direito na caixa e entregue o ovo que sair a Curgle Cranklehop, ao lado da máquina, na missão correspondente."]
+    ],
+    "sources": [["Wowhead · Forever repeatable quest", "https://www.wowhead.com/forever/quest=8893/the-super-egg-o-matic"], ["UrGameTips · Nest and machine route", "https://urgametips.com/wow-forever/quest-guides/super-egg-o-matic-hippogriff-egg/"], ["Wowhead · Egg Crate", "https://www.wowhead.com/forever/item=8647/egg-crate"]]
   },
   "92914": {
     "name": "Strange Pylons",
