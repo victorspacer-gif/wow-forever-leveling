@@ -120,6 +120,36 @@ await send('Page.navigate',{url:new URL('../leveling-guide.html',import.meta.url
 await until(`location.hash==='#guide' && document.querySelector('#guide-view')?.hidden===false && /Leveling Guide/.test(document.title)`);
 assert.match(await evaluate('document.title'),/Leveling Guide/);
 const walk='#quest-walkthrough';
+const eggIds=[2747,2748,2749,2750,8893];
+const eggCases=[
+  [2741,/without accepting anything.+Frayfeather Highlands.+58\.0, 76\.3.+52\.4, 27\.0.+one random egg.+no required order/s,/não é preciso aceitar nada.+ninho no chão.+ovo aleatório/s],
+  [2747,/Extraordinary Egg.+Curgle Cranklehop.+Box of Goodies/s,/Ovo Extraordinário.+Curgle Cranklehop/s],
+  [2748,/Fine Egg.+Curgle Cranklehop.+Box of Spells/s,/Ovo Fecundo.+Curgle Cranklehop/s],
+  [2749,/Ordinary Egg.+Curgle Cranklehop.+Box of Rations/s,/Ovo Comum.+Curgle Cranklehop/s],
+  [2750,/Bad Egg.+Curgle Cranklehop.+9 silver/s,/Ovo Gorado.+Curgle Cranklehop.+9 pratas/s],
+  [8893,/repeatable turn-in.+#2741.+another Hippogryph Egg.+Egg Crate/s,/entrega repetível.+#2741.+outro Ovo de Hipogrifo.+Caixa de Ovos/s],
+];
+const walkText=`document.querySelector('${walk}')?.innerText`;
+for (const [id,en,pt] of eggCases){
+  await evaluate(`location.hash='#quest=${id}'`);
+  await until(`document.querySelector('#quest-command')?.value.endsWith('(${id}))') && !!document.querySelector('${walk} li')`);
+  assert.match(await evaluate(walkText),en);
+  assert.ok(await evaluate(`[...document.querySelectorAll('${walk} .walkthrough-sources a')].some(a=>a.href.includes('/quest=${id}/'))`));
+  if(id===2741){
+    const links=await evaluate(`[...document.querySelectorAll('#next-panel a[data-quest]')].filter(a=>a.getClientRects().length).map(a=>Number(a.dataset.quest)).sort((a,b)=>a-b)`);
+    assert.deepEqual(links,eggIds);
+  } else {
+    assert.deepEqual(await evaluate(`[...document.querySelectorAll('#pre-panel a[data-quest]')].filter(a=>a.getClientRects().length).map(a=>Number(a.dataset.quest))`),[2741]);
+  }
+  await evaluate(`(()=>{const e=document.querySelector('#language');e.value='pt-BR';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await until(`(${walkText})?.includes('Onde ir e onde clicar')`);
+  assert.match(await evaluate(walkText),pt);
+  await evaluate(`(()=>{const e=document.querySelector('#language');e.value='en';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await until(`(${walkText})?.includes('Where to go and what to click')`);
+}
+const eggMatches=await search('The Super Egg-O-Matic');
+assert.ok([2741,8893].every(id=>eggMatches.includes(id)));
+await search('');
 await evaluate('location.hash="#quest=93404"');
 await until(`document.querySelector('${walk} li')?.textContent.includes('Woodwyrd')`);
 assert.match(await evaluate(`document.querySelector('${walk}').textContent`), /east side, under the stone bridge.+left of Woodwyrd/s);
