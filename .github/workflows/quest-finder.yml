@@ -69,7 +69,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          cp index.html quest-finder.html leveling-guide.html npc-quest-data.js quest-walkthrough-data.js \
+          cp index.html quest-finder.html leveling-guide.html npc-quest-data.js quest-walkthrough-data.js quest-video-links.js \
              README.md THIRD-PARTY-LICENSE-forever-quests.md THIRD-PARTY-NOTICE-QuestieDB.md "$RUNNER_TEMP/site/"
       - name: Save the tested site for Pages
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

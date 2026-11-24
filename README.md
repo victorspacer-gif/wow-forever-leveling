@@ -16,6 +16,18 @@ For video discovery, start with the **Videos** tab on the exact Wowhead Forever 
 
 Run `python tools/walkthrough_review.py --output review-queue.json` to generate a local queue covering every quest ID. It prioritizes object contacts, item objectives, and action-plus-landmark text; priority is only a research hint. `--quest 93404` limits the output. To rank a harvested YouTube catalog in the same run, pass `--videos catalog.json`: a JSON array of records with `id`, `title`, and optional `creator`, `description`, `chapters` (text array), or `wowheadQuestId` (only when the exact Forever quest page links that video). The matcher rejects explicit conflicting editions and won't pick between identical quest names without an exact-ID source or a distinguishing NPC/objective. Candidate results are not published or labeled complete automatically. After editing the curated file, run `python tools/walkthrough_review.py --check` and `bash tools/check-quest-finder.sh`.
 
+## Add a quest video (maintainers)
+
+Keep the private `quest-video-editor` checkout **beside** this repository, not inside it. From PowerShell in the `wow-forever-leveling` folder, start the editor with:
+
+```powershell
+..\quest-video-editor\start.cmd
+```
+
+It opens `http://127.0.0.1:8765/`. Search by English or PT-BR name, or by numeric quest ID. Check the ID beside the result, choose **+ Add video**, and paste an HTTPS YouTube watch, `youtu.be`, or Shorts link. The title is optional. Leave the start field blank to keep the timestamp in the link, or enter a time such as `1:30`. Edit or remove rows as needed, then choose **Save quest videos**. If the file changed on disk, copy any unsaved edits, reload, and reapply them.
+
+Saving updates only `quest-video-links.js` in this checkout. Review `git diff HEAD -- quest-video-links.js` and preview by opening `quest-finder.html` and selecting the quest. Links appear under **YouTube videos** / **Vídeos do YouTube** even without a written walkthrough. The page works offline; it contacts YouTube only when you follow a link. Saving does not commit, push, or publish. Keep the video data tracked; any private working copies inside this checkout belong in the ignored `/.local-admin/` directory, which is not packaged for Pages.
+
 ## Brazilian Portuguese
 
 The language switch and quest progress are saved independently in the browser. QuestieDB's [Forever PT-BR quest lookup](https://github.com/Questie/QuestieDB/tree/master/l10n/Forever/lookupQuests) supplies localized names and objectives when available. For safety, the importer joins only IDs where the site's English name matches the community English record. Unavailable translations fall back to English; other data such as route walkthroughs and NPC locations may remain in English. No automatic translation service is used. Translated quest data may be inaccurate or outdated. The source commit and coverage are embedded in `ptBRSource`.

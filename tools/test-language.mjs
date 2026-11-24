@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { setTimeout as wait } from 'node:timers/promises';
 import { join } from 'node:path';
 const profile=await mkdtemp(join(process.env.TMPDIR || process.cwd(),'quest-finder-chromium-'));
@@ -193,6 +195,40 @@ await until(`document.querySelector('${walk}')?.textContent.includes('sem confir
 await evaluate('location.hash="#quest=610"');
 await until(`document.querySelector('${walk}')===null && !!document.querySelector('#quest-objectives')`);
 assert.equal(await evaluate(`document.querySelector('#quest-objectives h3')?.innerText`),'O que fazer');
+// Exercise a populated local script without changing the production data.
+assert.equal(await evaluate('typeof globalThis.QUEST_VIDEO_LINKS'), 'object');
+const fixture=await mkdtemp(join(process.env.TMPDIR || tmpdir(),'quest-videos-'));
+try {
+  for(const name of ['quest-finder.html','npc-quest-data.js','quest-walkthrough-data.js'])
+    await copyFile(new URL('../'+name,import.meta.url),join(fixture,name));
+  const first={id:'Aa12_-Bb345',title:'<b>Part 1 & "setup"</b>',start:0};
+  const last={id:'bB23-_Cc456',title:'LongTitle'.repeat(12),start:2147483647};
+  const bad=[null,{...first,id:[first.id]},{...first,id:first.id+'\n'},{...first,id:'bad&id=1234'},
+    {...first,id:'Ãa12_-Bb345'},{...first,title:123},...[-1,1.5,2147483648,'70',null,undefined].map(start=>({...first,start}))];
+  await writeFile(join(fixture,'quest-video-links.js'),`globalThis.QUEST_VIDEO_LINKS = ${JSON.stringify({610:[first,...bad,last],611:bad,93404:[first]})};\n`);
+  await send('Page.navigate',{url:pathToFileURL(join(fixture,'quest-finder.html')).href+'#quest=610'});
+  const panel='#quest-videos';
+  await until(`!!document.querySelector('${panel} a')`);
+  assert.equal(await evaluate(`!!document.querySelector('${walk}')`),false);
+  for(const [lang,heading] of [['en','YouTube videos'],['pt-BR','Vídeos do YouTube']]) {
+    await evaluate(`(()=>{const e=document.querySelector('#language');e.value=${JSON.stringify(lang)};e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    assert.equal(await evaluate(`document.querySelector('${panel} h3').innerText`),heading);
+    assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('${panel} a'),a=>[a.innerText,a.href,a.target,a.rel,a.childElementCount,!!a.getClientRects().length])`),[
+      [first.title,'https://www.youtube.com/watch?v=Aa12_-Bb345','_blank','noopener noreferrer',0,true],
+      [last.title,'https://www.youtube.com/watch?v=bB23-_Cc456&t=2147483647s','_blank','noopener noreferrer',0,true]]);
+    assert.equal(await evaluate(`document.querySelectorAll('iframe,embed,video,${panel} img').length`),0);
+    assert.ok(await evaluate(`document.documentElement.scrollWidth<=innerWidth`),'video title overflows at 320px');
+  }
+  if(process.env.TMPDIR){await evaluate(`document.querySelector('${panel}').scrollIntoView()`);const png=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.TMPDIR,'wff-quest-videos-mobile.png'),Buffer.from(png.data,'base64'));}
+  for(const id of [611,603]) {
+    await evaluate(`location.hash='#quest=${id}'`);
+    await until(`document.querySelector('#quest-command')?.value.endsWith('(${id}))')`);
+    assert.equal(await evaluate(`!!document.querySelector('${panel}')`),false);
+  }
+  await evaluate(`location.hash='#quest=93404'`);
+  await until(`!!document.querySelector('${walk} .walkthrough-video a') && !!document.querySelector('${panel} a')`);
+  assert.equal(await evaluate(`document.querySelector('${walk} .walkthrough-video a').href`),'https://www.youtube.com/watch?v=YljPMrVgQoc');
+} finally {await rm(fixture,{recursive:true,force:true});}
 assert.equal(requests.filter(x=>/^https?:/.test(x)).length,0);
 assert.deepEqual(errors,[]);
 console.log('Chromium validated offline: search and chains; progression and guide routes; EN/PT-BR walkthroughs and direction search; exact video IDs and chapter times; 320px fit; zero console errors and remote requests.');
