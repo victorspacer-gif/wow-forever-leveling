@@ -5,5 +5,12 @@ globalThis.QUEST_VIDEO_LINKS = {
       "start": 0,
       "title": ""
     }
+  ],
+  "96018": [
+    {
+      "id": "qU7okIFjgUE",
+      "start": 0,
+      "title": ""
+    }
   ]
 };
